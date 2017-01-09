@@ -312,7 +312,7 @@ for row in range(minrow,maxrow):
             evcriteria[ck][0].add(paper)
 
 
-#Calculate the additional values
+#Calculate additional values
 
 for row in range(minrow,maxrow):
     if row in invRows:
@@ -531,7 +531,7 @@ abbrdic['feature selection'] = 'FS'
 
 
 
-#Dimentions for a string
+#Dimensions for a string
 def get_ax_size(fig,ax):
     bbox = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
     width, height = bbox.width, bbox.height
