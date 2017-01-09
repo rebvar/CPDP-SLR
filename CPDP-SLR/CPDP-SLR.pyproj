@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>1766ed44-2007-46f7-9935-ec7b1701d000</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>EXTSLR2.py</StartupFile>
+    <StartupFile>CPDPSLR.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -24,7 +24,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="EXTSLR2.py" />
+    <Compile Include="CPDPSLR.py" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="{fdbbfcd0-9a67-42fd-8988-3ef33af9d87d}\3.4" />
@@ -1396,14 +1396,15 @@
     <Content Include="PLOT\Metrics and Features\all\original\all-ckMetrics-and-Features-original-pf.eps" />
     <Content Include="PLOT\Metrics and Features\all\original\all-ckMetrics-and-Features-original-precision.eps" />
     <Content Include="PLOT\Metrics and Features\all\original\all-ckMetrics-and-Features-original-recall.eps" />
-    <Content Include="Qualitative data.xlsx" />
-    <Content Include="Quality Assessment.xlsx" />
+    <Content Include="Extra\Qualitative data.xlsx" />
+    <Content Include="Extra\Quality Assessment.xlsx" />
     <Content Include="requirements.txt" />
-    <Content Include="Search Results.xlsx" />
-    <Content Include="Search Terms Terms.xlsx" />
+    <Content Include="Extra\Search Results.xlsx" />
+    <Content Include="Extra\Search Terms Terms.xlsx" />
     <Content Include="vpl.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Extra\" />
     <Folder Include="PLOT\" />
     <Folder Include="PLOT\Aggregated Data Approach in Studies\" />
     <Folder Include="PLOT\Aggregated Data Approach in Studies\all\" />
