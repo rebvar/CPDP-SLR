@@ -1396,6 +1396,11 @@
     <Content Include="PLOT\Metrics and Features\all\original\all-ckMetrics-and-Features-original-pf.eps" />
     <Content Include="PLOT\Metrics and Features\all\original\all-ckMetrics-and-Features-original-precision.eps" />
     <Content Include="PLOT\Metrics and Features\all\original\all-ckMetrics-and-Features-original-recall.eps" />
+    <Content Include="Qualitative data.xlsx" />
+    <Content Include="Quality Assessment.xlsx" />
+    <Content Include="requirements.txt" />
+    <Content Include="Search Results.xlsx" />
+    <Content Include="Search Terms Terms.xlsx" />
     <Content Include="vpl.txt" />
   </ItemGroup>
   <ItemGroup>
