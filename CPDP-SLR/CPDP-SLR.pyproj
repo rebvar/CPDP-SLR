@@ -31,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="data.xlsx" />
+    <Content Include="Extra\PME Criteria.xlsx" />
     <Content Include="fpl.txt" />
     <Content Include="PLOT\Aggregated Data Approach in Studies\all\average\all-ckAggregated-Data-Approach-in-Studies-average-auc.eps" />
     <Content Include="PLOT\Aggregated Data Approach in Studies\all\average\all-ckAggregated-Data-Approach-in-Studies-average-balance.eps" />

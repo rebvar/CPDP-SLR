@@ -13,6 +13,7 @@ import copy
 basePath = 'PLOT/'
 
 from scipy.stats import wilcoxon, ttest_ind,mannwhitneyu as mwit2,ttest_rel
+from scipy.stats import chisqprob
 
 from openpyxl import Workbook
 
@@ -572,81 +573,116 @@ def draw(cklrnrdata,ck,name='lrnr',vType = 'Average',ml = []):
     h = 3.4
     if len(lrns)>10:
         h=4.5
-    fig,ax = plt.subplots(ncols = ncols,nrows = nrows,figsize=(max(5,2*len(lrns)),h))
     
-    if len(lrns)>10:
-        matplotlib.rcParams.update({'font.size': 18})
+    if name.find('--')>0 and len(lrns)>=18:        
+        nrows = 2
+        h = h*2
+        cnt = int(len(lrns)/2)
+        splc = [cnt,len(lrns)-cnt]
+        w = max(5,2*len(lrns)/2)
+        ac = 1
     else:
-        matplotlib.rcParams.update({'font.size': defFontSize})
-    
-    data = []
-    
-    btm = max([len(lrnr) for lrnr in lrns])
+        splc = [len(lrns)]
+        w = max(5,2*len(lrns))
+        ac = 0
 
-    for lrnr in lrns:
-        data.append(cklrnrdata[ck][lrnr])
-    
-    s = [np.median(data[i]) for i in range(len(data))]
-    inds = sorted(range(len(s)), key=lambda k: s[k])
-    data2 = [data[ind] for ind in inds]
-    lbls = [lrns[ind]+' ('+str(len(data[ind]))+')' for ind in inds]
-    mn = np.min([np.min(data[i]) for i in range(len(data))])
-    mn = np.floor(min(0,mn)*10)/10
-    ax.set_ylim(mn,1.0)
-    ax.set_yticks(np.arange(mn,1.,0.1))
-    
-    plt.tick_params(
-        axis='x',which='both',bottom='off',top='off',labelbottom='off') 
-
-
-
-    
-    ax.set_ylabel(vType+' '+ck)
-    
-    ax.set_xlim(0,len(data)+1)
-    pos = 1
-    #Place the labels (some might be long. find a correct place)
-    for lbl in lbls:
-        wt,ht = getWH(fig,ax,lbl)
-        w,h = get_ax_size(fig,ax)
-        sz = ht/h
-        posy = np.mean(data2[pos-1])
-        posymin = posy - sz/2
-        posymax = posy + sz/2
-
-        if posymin<0:            
-            posymax-=posymin
-            posymax+=0.05
-            posymin=0.05
-        if posymax>0.95:
-            posymin -= posymax-0.95
-            posymax=0.95
-        if posymin<=0:
-            posymax-= posymin
-            posymax+=0.02
-            posymin = 0.02
+    fig,axes = plt.subplots(ncols = ncols,nrows = nrows,figsize=(w,h))
+    if nrows==1:
+        axes = [axes]
         
-        ax.text(pos-0.4, posymax, lbl, rotation=90)
-        pos+=1
+    
+    for ax in axes:
+        
+        astart = 0
+        aend = 0
+        if ac>0:
+            astart = splc[ac-1]
+            aend = splc[ac-1]+splc[ac]
+        else:
+            aend = splc[ac]
 
-    prt=ax.violinplot(data2,showmeans=True,showmedians=True)
 
-    #Tests: Kruskal-Wallis H or Mann-Wittney U for multiple and 2 samples.
-    if len(data2)>2:
-        test = 'KW-H'
-        ps = scipy.stats.mstats.kruskalwallis(*data2) 
-        pv = round(ps[1],3)
-        ax.text(-0.2, 1.01, ' %s: p-value%s, statistic=%.3f' % (test,'='+str(pv) if pv>0 else '<<0.0001' ,round(ps[0],3)))
-    else:
-        if len(data2) == 2:
-            ps = scipy.stats.mannwhitneyu(data2[0],data2[1])
-            ax.text(-0.2, 1.01, ' ManW U: p-value=%f, statistic=%f' % (round(ps[1],3),round(ps[0],3)))
+        ac-=1
 
-    #Mean and Median markers
-    prt['cmeans'].set_facecolor('black')
-    prt['cmeans'].set_edgecolor('black')
-    prt['cmeans'].set_linestyle('--')
-    prt['cmeans'].set_linewidth(3)
+        if aend-astart>10:
+            matplotlib.rcParams.update({'font.size': 18})
+        else:
+            matplotlib.rcParams.update({'font.size': defFontSize})
+    
+        data = []
+    
+        btm = max([len(lrnr) for lrnr in lrns])
+
+        for lrnr in lrns:
+            data.append(cklrnrdata[ck][lrnr])
+    
+        s = [np.median(data[i]) for i in range(len(data))]
+        inds = sorted(range(len(s)), key=lambda k: s[k])
+        data2 = [data[ind] for ind in inds]
+        lbls = [lrns[ind]+' ('+str(len(data[ind]))+')' for ind in inds]
+
+        data2 = data2[astart:aend]
+        lbls = lbls[astart:aend]
+        mn = np.min([np.min(data2[i]) for i in range(len(data2))])
+        mn = np.floor(min(0,mn)*10)/10
+        ax.set_ylim(mn,1.0)
+        ax.set_yticks(np.arange(mn,1.,0.1))
+    
+        #ax.set_xticks([])
+        ax.tick_params(
+            axis='x',which='both',bottom='off',top='off',labelbottom='off') 
+
+
+
+        ylbl = vType+' '+ck 
+        if nrows>1:
+            ylbl+= ' ('+str(ac+1)+')'
+        ax.set_ylabel(ylbl)
+    
+        ax.set_xlim(0,len(data2)+1)
+        pos = 1
+        #Place the labels (some might be long. find a correct place)
+        for lbl in lbls:
+            wt,ht = getWH(fig,ax,lbl)
+            w,h = get_ax_size(fig,ax)
+            sz = ht/h
+            posy = np.mean(data2[pos-1])
+            posymin = posy - sz/2
+            posymax = posy + sz/2
+
+            if posymin<0:            
+                posymax-=posymin
+                posymax+=0.05
+                posymin=0.05
+            if posymax>0.95:
+                posymin -= posymax-0.95
+                posymax=0.95
+            if posymin<=0:
+                posymax-= posymin
+                posymax+=0.02
+                posymin = 0.02
+        
+            ax.text(pos-0.4, posymax, lbl, rotation=90)
+            pos+=1
+
+        prt=ax.violinplot(data2,showmeans=True,showmedians=True)
+
+        #Tests: Kruskal-Wallis H or Mann-Wittney U for multiple and 2 samples.
+        if len(data2)>2:
+            test = 'KW-H'
+            ps = scipy.stats.mstats.kruskalwallis(*data2) 
+            pv = round(ps[1],3)
+            ax.text(-0.2, 1.01, ' %s: p-value%s, statistic=%.3f' % (test,'='+str(pv) if pv>0 else '<<0.0001' ,round(ps[0],3)))
+        else:
+            if len(data2) == 2:
+                ps = scipy.stats.mannwhitneyu(data2[0],data2[1])
+                ax.text(-0.2, 1.01, ' ManW U: p-value=%f, statistic=%f' % (round(ps[1],3),round(ps[0],3)))
+
+        #Mean and Median markers
+        prt['cmeans'].set_facecolor('black')
+        prt['cmeans'].set_edgecolor('black')
+        prt['cmeans'].set_linestyle('--')
+        prt['cmeans'].set_linewidth(3)
 
     #Create Necessary dirs and Save the results
     if not os.path.exists(basePath+name+'/'+ms+'/'+vType+'/'):
@@ -670,7 +706,12 @@ def draw(cklrnrdata,ck,name='lrnr',vType = 'Average',ml = []):
 import matplotlib.gridspec as gridspec
 
 #Draw the forest plots
-def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0):            
+def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0,Q = 0,qpval = 0):
+    showQ = False
+    if Q<0 or qpval<0:
+        showQ = False
+    else:
+        showQ=True
     
     ms = ','.join(ml)
     if len(ms)==0 or ms==',':
@@ -705,6 +746,7 @@ def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0):
     plt.subplots_adjust(wspace=0, hspace=0)
     plt.xlim(-xd2-xsz,xd2)
     plt.ylim(-2,ylen-2)
+
     plt.tight_layout()
     plt.plot([-(xd2-xmargin)+0.02, (xd2-xmargin)-0.02], [ystart-1, ystart-1], color='k', linestyle='-', linewidth=2)
     plt.plot([0, 0], [ystart-1, ylen - ystart-0.02], color='k', linestyle='-', linewidth=2)
@@ -738,7 +780,8 @@ def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0):
         plt.text(-1.3, -1.8, xstr)
             
     rat = 1
-
+    if showQ:
+        plt.text(-xd2-xsz+0.12, ylen-2.3,'Q=%.2f , p-value=%.2f' %(Q,qpval))
     for i in range(2,len(data)-1):
         row = data[i]
         #calculate min and max
@@ -810,7 +853,7 @@ def findinlist(lst,txt):
 
 
 #for the measures and/or their combinations
-for msList in [[]]:#[[],['precision','recall','f-measure'],['pf','recall','balance']]:#,['f-measure'],,,,['auc']   
+for msList in []:#[[],['precision','recall','f-measure'],['pf','recall','balance']]:#,['f-measure'],,,,['auc']   
     #Types of reporting : average, median, original
     for vType in allvalTypes:
         cklrnrdata = {}
@@ -905,8 +948,7 @@ for msList in [[]]:#[[],['precision','recall','f-measure'],['pf','recall','balan
             #Compare the paper approaches
             ckdata[ck] = {}
             for appr in allpprappr:
-                dd = []
-            
+                dd = []            
                 for row in range(minrow,maxrow):
         
                     if row in invRows:
@@ -976,6 +1018,29 @@ for msList in [[]]:#[[],['precision','recall','f-measure'],['pf','recall','balan
 
 
 
+            #Compare Learner-individual-data approach combinations
+            ckdata[ck] = {}
+            for lrnr in lrns:
+                for appr in alldataapprdist:
+                    dd = []
+            
+                    for row in range(minrow,maxrow):
+        
+                        if row in invRows:
+                            continue
+                        if not set(dicrows[str(row)]['colVals'].keys()).issuperset(set(msList)):
+                            continue
+                        sr = str(row)
+                        if findinlist(dicrows[sr]['dataappr'].lower().split('+'),appr)>=0 and findinlist(dicrows[sr]['lrnr'].lower().split(' '),lrnr)>=0 and (dicrows[sr]['valueType'] == vType or dicrows[sr]['valueType']=='original'):
+                           if ck in dicrows[sr]['colVals'] and dicrows[sr]['WC'] == 'C':
+                                dd.append(dicrows[sr]['colVals'][ck])
+                    if len(dd)>2:
+                        ckdata[ck][lrnr+'--'+abbrdic[appr]] = dd
+            if len(ckdata[ck].keys())>0:
+                draw(ckdata,ck,'Base Learner--Aggregated Data Approach Combination in Studies',vType,msList)
+
+
+
             #Compare levels of granularity
             ckdata[ck] = {}
             for dpl in alldpvarlevel:
@@ -1033,6 +1098,9 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
                 print(vType,ms,sorted(list(cvsw.keys())),'No paper')
                 continue
             o2.write('#Raw Data for %s %s\n' % (vType,ms))
+            Q = -1
+            qpval = -1
+            
             for paper in cvsw.keys():
                 meanW = np.mean(cvsw[paper]['W'])
                 meanC = np.mean(cvsw[paper]['C'])
@@ -1062,6 +1130,7 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
                 cvsw[paper]['Lu'] = Lu
                 cvsw[paper]['nh'] = nh
                 cvsw[paper]['v'] = v
+                cvsw[paper]['iw']=1.0/v
                 cvsw[paper]['vsq'] = np.sqrt(v)
                 o2.write('%s\t %f\t %f\t %d\t %f\t %f\t %d\n' % (paper,meanW,stdW,nw,meanC,stdC,nc))
             
@@ -1070,9 +1139,8 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
             if se==0:
                 print (se)
             dstar = sum([cvsw[paper]['d']/cvsw[paper]['v'] for paper in cvsw.keys()])/se
-            print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
             
-            
+            print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))                        
             dtaforest = []
             dss = str(sorted(list(cvsw.keys())))
             s = ['@','InverseSum',vType,ms,dss]
@@ -1093,8 +1161,39 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
             dtaforest.append(s)
             o.write(str(s)+'\n')
             o.write('!\n!\n!\n!\n!\n')
-            drawForstPlot(dtaforest,ms,'Forest Plot-InvSum',vType,msList,maxX=4)
+            drawForstPlot(dtaforest,ms,'Forest Plot-InvSum',vType,msList,maxX=4,Q=Q,qpval=qpval)
+
+            degf = len(cvsw.keys())-1
+            Q = sum([((cvsw[paper]['d']-dstar)**2)/cvsw[paper]['v'] for paper in cvsw.keys()])
+            qpval = chisqprob(Q,degf)
+            taw2 = 0
             
+            if Q<=degf:
+                taw2 = 0                
+            else:
+                C = se - sum([(1.0/cvsw[paper]['v'])**2 for paper in cvsw.keys()])/se
+                taw2 = (Q-degf)/C
+           
+            se = sum([1.0/(cvsw[paper]['v']+taw2) for paper in cvsw.keys()])
+            if se==0:
+                print ('SE Zero',se)
+            dstar = sum([cvsw[paper]['d']/(cvsw[paper]['v']+taw2) for paper in cvsw.keys()])/se
+            
+            print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
+            
+            dss = str(sorted(list(cvsw.keys())))
+            for i in range(len(dtaforest)):
+                if dtaforest[i][0] in cvsw.keys():
+                    dtaforest[i][-1] = 1.0/(cvsw[dtaforest[i][0]]['v']+taw2)
+                    
+
+
+            s = ['Random',dstar,dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se),se]
+            dtaforest[-1]=s
+            #o.write(str(s)+'\n')
+            #o.write('!\n!\n!\n!\n!\n')
+            drawForstPlot(dtaforest,ms,'Random-Forest Plot-InvSum',vType,msList,maxX=4,Q=Q,qpval=qpval)
+
 
 #Forest plots for datasets and learners
 for type in [['ds','Dataset'],['lrnr','Learner']]:
@@ -1133,6 +1232,9 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
                     continue
 
                 o2.write('#Raw Data for %s %s %s\n' % (type[1],vType,ms))
+
+                Q=-1
+                qpval=-1
                 for ds in cvsw.keys():
                     meanW = np.mean(cvsw[ds]['W'])
                     meanC = np.mean(cvsw[ds]['C'])
@@ -1170,6 +1272,8 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
                 if se==0:
                     print (se)
                 dstar = sum([cvsw[ds]['d']/cvsw[ds]['v'] for ds in cvsw.keys()])/se
+
+                
                 print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
             
             
@@ -1217,7 +1321,46 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
                 o.write('!\n!\n!\n!\n!\n')
                 #sort based on dataset 
                                 
-                drawForstPlot(dtaforest,ms,'Forest Plot-'+type[1]+'-InvSum',vType,msList)
+                drawForstPlot(dtaforest,ms,'Forest Plot-'+type[1]+'-InvSum',vType,msList,Q=Q,qpval = qpval)
+
+
+                #Q = sum([((cvsw[ds]['d']-dstar)**2)/cvsw[ds]['v'] for ds in cvsw.keys()])
+                #qpval = chisqprob(Q,len(cvsw.keys())-1)
+                #print ('QPVAL->',Q,qpval)
+                
+
+                degf = len(cvsw.keys())-1
+                Q = sum([((cvsw[ds]['d']-dstar)**2)/cvsw[ds]['v'] for ds in cvsw.keys()])
+                qpval = chisqprob(Q,degf)
+                taw2 = 0
+            
+                if Q<=degf:
+                    taw2 = 0                
+                else:
+                    C = se - sum([(1.0/cvsw[ds]['v'])**2 for ds in cvsw.keys()])/se
+                    taw2 = (Q-degf)/C
+           
+                se = sum([1.0/(cvsw[ds]['v']+taw2) for ds in cvsw.keys()])
+                if se==0:
+                    print ('SE Zero',se)
+                dstar = sum([cvsw[ds]['d']/(cvsw[ds]['v']+taw2) for ds in cvsw.keys()])/se
+            
+                print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
+            
+                dss = str(sorted(list(cvsw.keys())))
+                for i in range(len(dtaforest)):
+                    if dtaforest[i][0] in cvsw.keys():
+                        dtaforest[i][-1] = 1.0/(cvsw[dtaforest[i][0]]['v']+taw2)
+                    
+
+
+                s = ['Random',dstar,dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se),se]
+                dtaforest[-1]=s
+                #o.write(str(s)+'\n')
+                #o.write('!\n!\n!\n!\n!\n')
+                drawForstPlot(dtaforest,ms,'Random-Forest Plot-'+type[1]+'-InvSum',vType,msList,Q=Q,qpval = qpval)
+
+
 
 
 #List of the papers for each reporting type
@@ -1372,6 +1515,8 @@ def copyFilesForPaper():
     o.close()
     if not os.path.exists(basePath+'CopyData/V/'):
         os.makedirs(basePath+'CopyData/V/')
+    if not os.path.exists(basePath+'jpg/CopyData/V/'):
+        os.makedirs(basePath+'jpg/CopyData/V/')
     
 
     for line in lines:
@@ -1382,7 +1527,13 @@ def copyFilesForPaper():
         
         if os.path.exists(basePath+'allin1/'+line):
             copyfile(basePath+'allin1/'+line, basePath+'CopyData/V/'+line)
+        else:
+            print ('File Not Found:' , line)
 
+        if os.path.exists(basePath+'jpg/allin1/'+line[:-4]+'.jpg'):
+            copyfile(basePath+'jpg/allin1/'+line[:-4]+'.jpg', basePath+'jpg/CopyData/V/'+line[:-4]+'.jpg')
+        else:
+            print ('File Not Found:' , line[:-4]+'.jpg')
 
 
     o = open('fpl.txt')
@@ -1390,6 +1541,8 @@ def copyFilesForPaper():
     o.close()
     if not os.path.exists(basePath+'CopyData/F/'):
         os.makedirs(basePath+'CopyData/F/')
+    if not os.path.exists(basePath+'jpg/CopyData/F/'):
+        os.makedirs(basePath+'jpg/CopyData/F/')
 
 
     for line in lines:
@@ -1400,6 +1553,14 @@ def copyFilesForPaper():
         
         if os.path.exists(basePath+'allin1Forest/'+line):
             copyfile(basePath+'allin1Forest/'+line, basePath+'CopyData/F/'+line)
+        else:
+            print ('File Not Found:' , line)
+
+        if os.path.exists(basePath+'jpg/allin1Forest/'+line[:-4]+'.jpg'):
+            copyfile(basePath+'jpg/allin1Forest/'+line[:-4]+'.jpg', basePath+'jpg/CopyData/F/'+line[:-4]+'.jpg')
+        else:
+            print ('File Not Found:' , line[:-4]+'.jpg')
+
 
 copyFilesForPaper()
 
