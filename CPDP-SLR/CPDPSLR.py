@@ -13,7 +13,7 @@ import copy
 basePath = 'PLOT/'
 
 from scipy.stats import wilcoxon, ttest_ind,mannwhitneyu as mwit2,ttest_rel
-from scipy.stats import chisqprob
+from scipy.stats import chisqprob,norm
 
 from openpyxl import Workbook
 
@@ -332,6 +332,8 @@ for row in range(minrow,maxrow):
             if not 'f-measure' in papers[paper]['row'+str(row)]['colVals'].keys():
                 if prec+rec!=0:
                     papers[paper]['row'+str(row)]['colVals']['f-measure'] = (2*rec*prec)/(rec+prec)
+                else:
+                    papers[paper]['row'+str(row)]['colVals']['f-measure'] = 0
             if not 'g-mean1' in papers[paper]['row'+str(row)]['colVals'].keys():
                 papers[paper]['row'+str(row)]['colVals']['g-mean1'] = math.sqrt(rec*prec)
 
@@ -341,6 +343,8 @@ for row in range(minrow,maxrow):
                 fm = papers[paper]['row'+str(row)]['colVals']['f-measure']
                 if (2*rec-fm)!=0:
                     papers[paper]['row'+str(row)]['colVals']['precision'] = fm*rec/(2*rec-fm)
+                else:
+                    papers[paper]['row'+str(row)]['colVals']['precision'] = 0
 
         if 'precision' in papers[paper]['row'+str(row)]['colVals'].keys():
             prec = papers[paper]['row'+str(row)]['colVals']['precision']
@@ -356,22 +360,25 @@ for row in range(minrow,maxrow):
             if not 'g-measure' in papers[paper]['row'+str(row)]['colVals'].keys():
                 if (rec+(1-pf))!=0:
                     papers[paper]['row'+str(row)]['colVals']['g-measure'] = (2*rec*(1-pf))/(rec+(1-pf))
+                else:
+                    papers[paper]['row'+str(row)]['colVals']['g-measure'] = 0
             if not 'g-mean2' in papers[paper]['row'+str(row)]['colVals'].keys():
                 papers[paper]['row'+str(row)]['colVals']['g-mean2'] = math.sqrt(rec*(1-pf))
 
 
         if 'balance' in papers[paper]['row'+str(row)]['colVals'].keys():
             if not 'pf' in papers[paper]['row'+str(row)]['colVals'].keys():
-                bal = papers[paper]['row'+str(row)]['colVals']['balance']
-                if (1-rec)!=0:
-                    papers[paper]['row'+str(row)]['colVals']['pf'] = pf = math.sqrt((2*(1-bal)*(1-bal))/((1-rec)*(1-rec)))
-            
+                bal = papers[paper]['row'+str(row)]['colVals']['balance']                
+                papers[paper]['row'+str(row)]['colVals']['pf'] = math.sqrt((2*(1-bal)*(1-bal))-((1-rec)*(1-rec)))
+                
                         
         if 'pf' in papers[paper]['row'+str(row)]['colVals'].keys():
             pf = papers[paper]['row'+str(row)]['colVals']['pf']
             if not 'g-measure' in papers[paper]['row'+str(row)]['colVals'].keys():
                 if (rec+(1-pf))!=0:
                     papers[paper]['row'+str(row)]['colVals']['g-measure'] = (2*rec*(1-pf))/(rec+(1-pf))
+                else:
+                    papers[paper]['row'+str(row)]['colVals']['g-measure'] = 0
             if not 'g-mean2' in papers[paper]['row'+str(row)]['colVals'].keys():
                 papers[paper]['row'+str(row)]['colVals']['g-mean2'] = math.sqrt(rec*(1-pf))
         
@@ -384,6 +391,8 @@ for row in range(minrow,maxrow):
                 fm = papers[paper]['row'+str(row)]['colVals']['f-measure']
                 if (2*prec-fm)!=0:
                     papers[paper]['row'+str(row)]['colVals']['recall'] = fm*prec/(2*prec-fm)
+                else:
+                    papers[paper]['row'+str(row)]['colVals']['recall'] = 0
 
 
 tset = set()
@@ -668,15 +677,16 @@ def draw(cklrnrdata,ck,name='lrnr',vType = 'Average',ml = []):
         prt=ax.violinplot(data2,showmeans=True,showmedians=True)
 
         #Tests: Kruskal-Wallis H or Mann-Wittney U for multiple and 2 samples.
+        #Not including the test results at the moment.
         if len(data2)>2:
             test = 'KW-H'
             ps = scipy.stats.mstats.kruskalwallis(*data2) 
             pv = round(ps[1],3)
-            ax.text(-0.2, 1.01, ' %s: p-value%s, statistic=%.3f' % (test,'='+str(pv) if pv>0 else '<<0.0001' ,round(ps[0],3)))
+            #ax.text(-0.2, 1.01, ' %s: p-value%s, statistic=%.3f' % (test,'='+str(pv) if pv>0 else '<<0.0001' ,round(ps[0],3)))
         else:
             if len(data2) == 2:
                 ps = scipy.stats.mannwhitneyu(data2[0],data2[1])
-                ax.text(-0.2, 1.01, ' ManW U: p-value=%f, statistic=%f' % (round(ps[1],3),round(ps[0],3)))
+                #ax.text(-0.2, 1.01, ' ManW U: p-value=%f, statistic=%f' % (round(ps[1],3),round(ps[0],3)))
 
         #Mean and Median markers
         prt['cmeans'].set_facecolor('black')
@@ -706,7 +716,7 @@ def draw(cklrnrdata,ck,name='lrnr',vType = 'Average',ml = []):
 import matplotlib.gridspec as gridspec
 
 #Draw the forest plots
-def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0,Q = 0,qpval = 0):
+def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0,Q = 0,qpval = 0,taw2=0):
     showQ = False
     if Q<0 or qpval<0:
         showQ = False
@@ -748,8 +758,8 @@ def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0,Q = 0
     plt.ylim(-2,ylen-2)
 
     plt.tight_layout()
-    plt.plot([-(xd2-xmargin)+0.02, (xd2-xmargin)-0.02], [ystart-1, ystart-1], color='k', linestyle='-', linewidth=2)
-    plt.plot([0, 0], [ystart-1, ylen - ystart-0.02], color='k', linestyle='-', linewidth=2)
+    plt.plot([-(xd2-xmargin)+0.02, (xd2-xmargin)-0.02], [ystart-1, ystart-1], color='k', linestyle='-', linewidth=1)
+    plt.plot([0, 0], [ystart-1, ylen - ystart-0.02], color='k', linestyle='-', linewidth=0.7)
     
     i = 9
     j=0
@@ -780,8 +790,7 @@ def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0,Q = 0
         plt.text(-1.3, -1.8, xstr)
             
     rat = 1
-    if showQ:
-        plt.text(-xd2-xsz+0.12, ylen-2.3,'Q=%.2f , p-value=%.2f' %(Q,qpval))
+    
     for i in range(2,len(data)-1):
         row = data[i]
         #calculate min and max
@@ -804,16 +813,38 @@ def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0,Q = 0
 
     size = 0.1
     row = data[-1]
-    
+    pvall = row[-1]
+    pvalltext = ''
+    if pvall<0.001:
+        pvalltext = 'p-val<0.001'
+    else:
+        pvalltext = 'p-val=%.3f'%pvall
     points = [[row[2],size/2], [row[1],size+0.1], [row[3],size/2], [row[1],-size]]
     p = Polygon(points,closed=True,color='k')
-    plt.annotate('Summary', xy=(-xd2-xmargin/2-0.8, size/2))
+    plt.annotate('Summary (%s)'%pvalltext, xy=(-xd2-xmargin/2-0.8, size/2+0.1))
+    plt.annotate('95%% Conf. Int. = [%.3f , %.3f]'%(row[2],row[3]), xy=(-xd2-xmargin/2-0.8, size/2-0.25))
+    if showQ:
+        if qpval<0.001:
+
+            plt.text(-xd2-xmargin/2-0.8, size/2-0.66,'($\\tau^2$=%.2f, Q=%.2f, p-val<0.001)' %(taw2,Q))
+        else:
+            plt.text(-xd2-xmargin/2-0.8, size/2-0.66,'($\\tau^2$=%.2f, Q=%.2f, p-val=%.3f)'  %(taw2,Q,qpval))
+    
     currentAxis.add_patch(p)
     plt.plot([row[1], row[1]], [-size/2,ylen-ystart], color='k', linestyle='-.', linewidth=1)
     if row[1]<0:
         plt.annotate(str(round(row[1],3)), xy=(row[1]-0.40, size/2-0.5))
     else:
         plt.annotate(str(round(row[1],3)), xy=(row[1]-0.35, size/2-0.5))
+    
+    #if row[2]<0:
+    #    plt.annotate('%.3f'%row[2], xy=(row[2]-0.40, size/2))
+    #else:
+    #    plt.annotate('%.3f'%row[2], xy=(row[2]-0.35, size/2))
+    #if row[3]<0:
+    #    plt.annotate('%.3f'%row[3], xy=(row[3]+0.1, size/2))
+    #else:
+    #    plt.annotate('%.3f'%row[3], xy=(row[3]+0.05, size/2))
     #Necessary dirs and save the plots
     if not os.path.exists(basePath+name+'/'+ms+'/'+vType+'/'):
         os.makedirs(basePath+name+'/'+ms+'/'+vType+'/')
@@ -1100,7 +1131,7 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
             o2.write('#Raw Data for %s %s\n' % (vType,ms))
             Q = -1
             qpval = -1
-            
+            taw2 = -1
             for paper in cvsw.keys():
                 meanW = np.mean(cvsw[paper]['W'])
                 meanC = np.mean(cvsw[paper]['C'])
@@ -1108,6 +1139,7 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
                 stdC = np.std(cvsw[paper]['C'])
                 nw = len(cvsw[paper]['W'])
                 nc = len(cvsw[paper]['C'])
+                
                 stdP = math.sqrt(((nw-1)*stdW*stdW+(nc-1)*stdC*stdC)/(nw+nc-2))
                 g = (meanC - meanW)/stdP
                 d = J(nw+nc-2)*g
@@ -1115,7 +1147,7 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
                 v = nh+((d*d)/(2*(nc+nw)))
                 Ll = d-1.96*np.sqrt(v)
                 Lu = d+1.96*np.sqrt(v)
-                print (paper,Ll,Lu)
+                
                 cvsw[paper]['meanW'] = meanW
                 cvsw[paper]['meanC'] = meanC
                 cvsw[paper]['stdW'] = stdW
@@ -1136,32 +1168,48 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
             
             o2.write('\n\n\n\n')
             se = sum([1.0/cvsw[paper]['v'] for paper in cvsw.keys()])
+            
             if se==0:
-                print (se)
+                print ('SE Zero - Fixed - Study',se, vType,ms)
+                continue
+            
             dstar = sum([cvsw[paper]['d']/cvsw[paper]['v'] for paper in cvsw.keys()])/se
             
-            print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))                        
+            #print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))                        
             dtaforest = []
+            dtaforest2 = []
             dss = str(sorted(list(cvsw.keys())))
-            s = ['@','InverseSum',vType,ms,dss]
-            dtaforest.append(s)
-            o.write(str(s)+'\n')
-            s = ['Study','Center','Low','High','Weight']
-            dtaforest.append(s)
-            o.write(str(s)+'\n')
+            
+            
+            frvals = []
             for i in range(50):
                 if 'A'+str(i) in cvsw.keys():
                     paper = 'A'+str(i)
                     s = [paper,cvsw[paper]['d'],cvsw[paper]['Ll'],cvsw[paper]['Lu'],1.0/cvsw[paper]['v']]
+                    frvals.append(cvsw[paper]['d'])
                     dtaforest.append(s)
                     o.write(str(s)+'\n')
+            
+            frsIndexes = sorted(range(len(frvals)), key=lambda k: frvals[k])
+            
+            
+            
+            s = ['@','InverseSum',vType,ms,dss]            
+            dtaforest2.append(s)
+            o.write(str(s)+'\n')
+            s = ['Study','Center','Low','High','Weight']
+            dtaforest2.append(s)
+            o.write(str(s)+'\n')
+            for fi,frsi in enumerate(frsIndexes):
+                dtaforest2.append(dtaforest[frsi])
+            dtaforest = dtaforest2
 
-
-            s = ['Fixed',dstar,dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se),se]
+            s = ['Fixed',dstar,dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se),se,math.sqrt(1/se),dstar/math.sqrt(1/se),2*norm.sf(abs(dstar/math.sqrt(1/se)))]
             dtaforest.append(s)
             o.write(str(s)+'\n')
             o.write('!\n!\n!\n!\n!\n')
-            drawForstPlot(dtaforest,ms,'Forest Plot-InvSum',vType,msList,maxX=4,Q=Q,qpval=qpval)
+            drawForstPlot(dtaforest,ms,'Forest Plot-InvSum',vType,msList,maxX=4,Q=Q,qpval=qpval,taw2=0)
+            print ('Fixed - Study',vType,ms)
 
             degf = len(cvsw.keys())-1
             Q = sum([((cvsw[paper]['d']-dstar)**2)/cvsw[paper]['v'] for paper in cvsw.keys()])
@@ -1171,15 +1219,21 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
             if Q<=degf:
                 taw2 = 0                
             else:
-                C = se - sum([(1.0/cvsw[paper]['v'])**2 for paper in cvsw.keys()])/se
+                C = se - sum([(1.0/(cvsw[paper]['v'])**2) for paper in cvsw.keys()])/se
+                if C==0:
+                    print ('C Zero - Random - Study',C, vType,ms,se)
+                    continue
                 taw2 = (Q-degf)/C
            
             se = sum([1.0/(cvsw[paper]['v']+taw2) for paper in cvsw.keys()])
             if se==0:
-                print ('SE Zero',se)
+                
+                print ('SE Zero - Random - Study',se, vType,ms)
+                continue
+
             dstar = sum([cvsw[paper]['d']/(cvsw[paper]['v']+taw2) for paper in cvsw.keys()])/se
             
-            print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
+            #print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
             
             dss = str(sorted(list(cvsw.keys())))
             for i in range(len(dtaforest)):
@@ -1188,11 +1242,12 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
                     
 
 
-            s = ['Random',dstar,dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se),se]
+            s = ['Random',dstar,dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se),se,math.sqrt(1/se),dstar/math.sqrt(1/se),2*norm.sf(abs(dstar/math.sqrt(1/se)))]
+            print ('Random - Study', vType,ms)
             dtaforest[-1]=s
             #o.write(str(s)+'\n')
             #o.write('!\n!\n!\n!\n!\n')
-            drawForstPlot(dtaforest,ms,'Random-Forest Plot-InvSum',vType,msList,maxX=4,Q=Q,qpval=qpval)
+            drawForstPlot(dtaforest,ms,'Random-Forest Plot-InvSum',vType,msList,maxX=4,Q=Q,qpval=qpval,taw2=taw2)
 
 
 #Forest plots for datasets and learners
@@ -1235,6 +1290,7 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
 
                 Q=-1
                 qpval=-1
+                taw2=-1
                 for ds in cvsw.keys():
                     meanW = np.mean(cvsw[ds]['W'])
                     meanC = np.mean(cvsw[ds]['C'])
@@ -1242,14 +1298,16 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
                     stdC = np.std(cvsw[ds]['C'])
                     nw = len(cvsw[ds]['W'])
                     nc = len(cvsw[ds]['C'])
+                    
                     stdP = math.sqrt(((nw-1)*stdW*stdW+(nc-1)*stdC*stdC)/(nw+nc-2))
+                    
                     g = (meanC - meanW)/stdP
                     d = J(nw+nc-2)*g
                     nh = nhat(nw,nc)
                     v = nh+((d*d)/(2*(nc+nw)))
                     Ll = d-1.96*np.sqrt(v)
                     Lu = d+1.96*np.sqrt(v)
-                    print (ds,Ll,Lu)
+                    
                     cvsw[ds]['meanW'] = meanW
                     cvsw[ds]['meanC'] = meanC
                     cvsw[ds]['stdW'] = stdW
@@ -1265,63 +1323,74 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
                     cvsw[ds]['nh'] = nh
                     cvsw[ds]['v'] = v
                     cvsw[ds]['vsq'] = np.sqrt(v)
+                    
                     o2.write('%s\t %f\t %f\t %d\t %f\t %f\t %d\n' % (ds,meanW,stdW,nw,meanC,stdC,nc))
             
                 o2.write('\n\n\n\n')
                 se = sum([1.0/cvsw[ds]['v'] for ds in cvsw.keys()])
-                if se==0:
-                    print (se)
+                if se==0:                    
+                    print ('SE Zero - Fixed - ',type[0],se, vType,ms)
+                    continue
                 dstar = sum([cvsw[ds]['d']/cvsw[ds]['v'] for ds in cvsw.keys()])/se
 
                 
-                print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
+                #print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
             
             
                 dtaforest = []
+                dtaforest2 = []
                 dss = str(sorted(list(cvsw.keys())))
-                s = ['@',type[1]+' InverseSum',vType,ms,dss]
-                dtaforest.append(s)
-                o.write(str(s)+'\n')
-                s = ['Study','Center','Low','High','Weight']
-                dtaforest.append(s)
-                o.write(str(s)+'\n')
+                
+                frvals = []
                 for ds in sorted(list(cvsw.keys())):
                     s = [ds,cvsw[ds]['d'],cvsw[ds]['Ll'],cvsw[ds]['Lu'],1.0/cvsw[ds]['v']]
                     dtaforest.append(s)
+                    frvals.append(cvsw[ds]['d'])
                     o.write(str(s)+'\n')
 
-                
+                frsIndexes = sorted(range(len(frvals)), key=lambda k: frvals[k])
 
-                if type[0]=='ds':
-                    dtaforest2 = []
-                    dtaforest2.append(dtaforest[0])
-                    dtaforest2.append(dtaforest[1])
-                    dtaforest[0] = None
-                    dtaforest[1] = None
-                    for so in suitesOrder:
-                        for i in range(len(dtaforest)):
-                            if dtaforest[i] == None:
-                                continue
-                            if dtaforest[i][0] in dsSuites[so]:
-                                dtaforest2.append(dtaforest[i])
-                                dtaforest[i] = None
-                    for i in range(len(dtaforest)):
-                        if dtaforest[i] == None:
-                            continue
-                        dtaforest2.append(dtaforest[i])
+                s = ['@',type[1]+' InverseSum',vType,ms,dss]
+                dtaforest2.append(s)
+                o.write(str(s)+'\n')
+                s = ['Study','Center','Low','High','Weight']
+                dtaforest2.append(s)
+                o.write(str(s)+'\n')
+                for fi,frsi in enumerate(frsIndexes):
+                    dtaforest2.append(dtaforest[frsi])
+                dtaforest = dtaforest2
+
+
+                #if type[0]=='ds':
+                #    dtaforest2 = []
+                #    dtaforest2.append(dtaforest[0])
+                #    dtaforest2.append(dtaforest[1])
+                #    dtaforest[0] = None
+                #    dtaforest[1] = None
+                #    for so in suitesOrder:
+                #        for i in range(len(dtaforest)):
+                #            if dtaforest[i] == None:
+                #                continue
+                #            if dtaforest[i][0] in dsSuites[so]:
+                #                dtaforest2.append(dtaforest[i])
+                #                dtaforest[i] = None
+                #    for i in range(len(dtaforest)):
+                #        if dtaforest[i] == None:
+                #            continue
+                #        dtaforest2.append(dtaforest[i])
                     
-                    if len(dtaforest)!=len(dtaforest2):
-                        print ('Not Equal...Error')
-                        input('')
-                    dtaforest = dtaforest2
+                #    if len(dtaforest)!=len(dtaforest2):
+                #        print ('Not Equal...Error')
+                #        input('')
+                #    dtaforest = dtaforest2
                 
-                s = ['Fixed',dstar,dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se),se]
+                s = ['Fixed',dstar,dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se),se,math.sqrt(1/se),dstar/math.sqrt(1/se),2*norm.sf(abs(dstar/math.sqrt(1/se)))]
                 dtaforest.append(s)
                 o.write(str(s)+'\n')
                 o.write('!\n!\n!\n!\n!\n')
                 #sort based on dataset 
-                                
-                drawForstPlot(dtaforest,ms,'Forest Plot-'+type[1]+'-InvSum',vType,msList,Q=Q,qpval = qpval)
+                print ('Fixed - ',type[0],vType,ms)                                                
+                drawForstPlot(dtaforest,ms,'Forest Plot-'+type[1]+'-InvSum',vType,msList,Q=Q,qpval = qpval,taw2=taw2)
 
 
                 #Q = sum([((cvsw[ds]['d']-dstar)**2)/cvsw[ds]['v'] for ds in cvsw.keys()])
@@ -1338,14 +1407,19 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
                     taw2 = 0                
                 else:
                     C = se - sum([(1.0/cvsw[ds]['v'])**2 for ds in cvsw.keys()])/se
+                    if C==0:
+                        print ('C Zero - Random - ',type[0],C, vType,ms)
+                        continue
                     taw2 = (Q-degf)/C
            
                 se = sum([1.0/(cvsw[ds]['v']+taw2) for ds in cvsw.keys()])
                 if se==0:
-                    print ('SE Zero',se)
+                    
+                    print ('SE Zero - Random - ',type[0],se, vType,ms)
+                    continue
                 dstar = sum([cvsw[ds]['d']/(cvsw[ds]['v']+taw2) for ds in cvsw.keys()])/se
             
-                print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
+                #print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
             
                 dss = str(sorted(list(cvsw.keys())))
                 for i in range(len(dtaforest)):
@@ -1354,11 +1428,12 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
                     
 
 
-                s = ['Random',dstar,dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se),se]
+                s = ['Random',dstar,dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se),se,math.sqrt(1/se),dstar/math.sqrt(1/se),2*norm.sf(abs(dstar/math.sqrt(1/se)))]
+                print ('Random - ',type[0],vType,ms)
                 dtaforest[-1]=s
                 #o.write(str(s)+'\n')
                 #o.write('!\n!\n!\n!\n!\n')
-                drawForstPlot(dtaforest,ms,'Random-Forest Plot-'+type[1]+'-InvSum',vType,msList,Q=Q,qpval = qpval)
+                drawForstPlot(dtaforest,ms,'Random-Forest Plot-'+type[1]+'-InvSum',vType,msList,Q=Q,qpval = qpval,taw2=taw2)
 
 
 
