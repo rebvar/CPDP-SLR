@@ -1401,7 +1401,7 @@
     <Content Include="Extra\Quality Assessment.xlsx" />
     <Content Include="requirements.txt" />
     <Content Include="Extra\Search Results.xlsx" />
-    <Content Include="Extra\Search Terms Terms.xlsx" />
+    <Content Include="Extra\Search Terms.xlsx" />
     <Content Include="vpl.txt" />
   </ItemGroup>
   <ItemGroup>

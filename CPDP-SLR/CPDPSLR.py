@@ -716,7 +716,7 @@ def draw(cklrnrdata,ck,name='lrnr',vType = 'Average',ml = []):
 import matplotlib.gridspec as gridspec
 
 #Draw the forest plots
-def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0,Q = 0,qpval = 0,taw2=0):
+def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0,Q = 0,qpval = 0,taw2=0,fws = None,sfixed = None):
     showQ = False
     if Q<0 or qpval<0:
         showQ = False
@@ -790,8 +790,8 @@ def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0,Q = 0
         plt.text(-1.3, -1.8, xstr)
             
     rat = 1
-    
-    for i in range(2,len(data)-1):
+    lastrowIndex = len(data)-1
+    for i in range(2,lastrowIndex):
         row = data[i]
         #calculate min and max
         r1 = row[2]
@@ -800,7 +800,8 @@ def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0,Q = 0
         #calculate the size of the box
         size = np.sqrt(row[4])*3/30
         #print (size)
-
+        
+           
         #the length of the line
         linelen  = r2 - r1
         #Write the study name
@@ -809,7 +810,12 @@ def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0,Q = 0
         plt.plot([r1, r2], [(i)*step, (i)*step], color='k', linestyle='-', linewidth=0.5)
         #Draw the rectangle for each study.
         #currentAxis.add_patch(Rectangle((r1+linelen/2-size*rat/2  , (i)*step-size/2 ), size*rat, size,alpha=1,color='k'))
-        currentAxis.add_patch(Rectangle((row[1]-size*rat/2  , (i)*step-size/2 ), size*rat, size,alpha=1,color='k'))
+        currentAxis.add_patch(Rectangle((row[1]-size*rat/2  , (i)*step-size/2 ), size*rat, size,alpha=1,color='k',fill=True,linewidth=0.4))
+
+        if fws!=None:
+            sizef = np.sqrt(fws[i-2])*3/30
+            linelen  = r2 - r1
+            currentAxis.add_patch(Rectangle((row[1]-sizef*rat/2  , (i)*step-sizef/2 ), sizef*rat, sizef,alpha=1,color='k',linestyle='-',fill=False,linewidth=0.7))
 
     size = 0.1
     row = data[-1]
@@ -819,23 +825,65 @@ def drawForstPlot(data,ck,name='lrnr',vType = 'Average',ml = [],maxX = 7.0,Q = 0
         pvalltext = 'p-val<0.001'
     else:
         pvalltext = 'p-val=%.3f'%pvall
-    points = [[row[2],size/2], [row[1],size+0.1], [row[3],size/2], [row[1],-size]]
+    plt.annotate('Random Effect (%s)'%pvalltext, xy=(-xd2-xmargin/2-0.8, size/2+0.50))
+    plt.annotate('95%% CI=[%.2f , %.2f]'%(row[2],row[3]), xy=(-xd2-xmargin/2-0.8, size/2+0.1))
+    if sfixed:
+        points = [[row[2],size/2+0.35], [row[1],size+0.1+0.35], [row[3],size/2+0.35], [row[1],-size+0.35]]
+        if row[1]<0:
+            plt.annotate(str(round(row[1],3)), xy=(row[1]-0.40, size/2-0.05))
+        else:
+            plt.annotate(str(round(row[1],3)), xy=(row[1]-0.35, size/2-0.05))
+        plt.plot([row[1], row[1]], [-size/2+0.35,ylen-ystart], color='k', linestyle='-.', linewidth=1)
+    else:
+        points = [[row[2],size/2], [row[1],size+0.1], [row[3],size/2], [row[1],-size]]
+        if row[1]<0:
+            plt.annotate(str(round(row[1],3)), xy=(row[1]-0.40, size/2-0.5))
+        else:
+            plt.annotate(str(round(row[1],3)), xy=(row[1]-0.35, size/2-0.5))
+        plt.plot([row[1], row[1]], [-size/2,ylen-ystart], color='k', linestyle='-.', linewidth=1)
     p = Polygon(points,closed=True,color='k')
-    plt.annotate('Summary (%s)'%pvalltext, xy=(-xd2-xmargin/2-0.8, size/2+0.1))
-    plt.annotate('95%% Conf. Int. = [%.3f , %.3f]'%(row[2],row[3]), xy=(-xd2-xmargin/2-0.8, size/2-0.25))
+    
     if showQ:
         if qpval<0.001:
 
-            plt.text(-xd2-xmargin/2-0.8, size/2-0.66,'($\\tau^2$=%.2f, Q=%.2f, p-val<0.001)' %(taw2,Q))
+            plt.text(-xd2-xmargin/2-0.8, size/2-0.30,'($\\tau^2$=%.2f, Q=%.2f, p-val<0.001)' %(taw2,Q))
         else:
-            plt.text(-xd2-xmargin/2-0.8, size/2-0.66,'($\\tau^2$=%.2f, Q=%.2f, p-val=%.3f)'  %(taw2,Q,qpval))
+            plt.text(-xd2-xmargin/2-0.8, size/2-0.30,'($\\tau^2$=%.2f, Q=%.2f, p-val=%.3f)'  %(taw2,Q,qpval))
+    
     
     currentAxis.add_patch(p)
-    plt.plot([row[1], row[1]], [-size/2,ylen-ystart], color='k', linestyle='-.', linewidth=1)
-    if row[1]<0:
-        plt.annotate(str(round(row[1],3)), xy=(row[1]-0.40, size/2-0.5))
-    else:
-        plt.annotate(str(round(row[1],3)), xy=(row[1]-0.35, size/2-0.5))
+    
+    
+    
+
+
+    if sfixed:
+        row = sfixed
+        pvall = row[-1]
+        pvalltext = ''
+        if pvall<0.001:
+            pvalltext = 'p-val<0.001'
+        else:
+            pvalltext = 'p-val=%.3f'%pvall
+
+        if pvall<0.001:
+            pvalltext = 'p-val<0.001'
+        else:
+            pvalltext = 'p-val=%.3f'%pvall
+        plt.annotate('Fixed Effect (%s)'%pvalltext, xy=(3, size/2-0.40))
+        plt.annotate('95%% CI=[%.2f , %.2f]'%(row[2],row[3]), xy=(3, size/2-0.75))
+
+        points = [[row[2],size/2-0.40], [row[1],size+0.1-0.40], [row[3],size/2-0.40], [row[1],-size-0.40]]
+        p = Polygon(points,closed=True,color='k',fill=False,linewidth=0.5)
+        #plt.annotate('Summary (%s)'%pvalltext, xy=(-xd2-xmargin/2-0.8, size/2+0.1))
+        #plt.annotate('95%% Conf. Int. = [%.3f , %.3f]'%(row[2],row[3]), xy=(-xd2-xmargin/2-0.8, size/2-0.25))
+        
+        currentAxis.add_patch(p)
+        plt.plot([row[1], row[1]], [-size/2-0.40,ylen-ystart], color='r', linestyle=':', linewidth=0.5)
+        if row[1]<0:
+            plt.annotate(str(round(row[1],3)), xy=(row[1]-0.40, size/2-0.85))
+        else:
+            plt.annotate(str(round(row[1],3)), xy=(row[1]-0.35, size/2-0.85))
     
     #if row[2]<0:
     #    plt.annotate('%.3f'%row[2], xy=(row[2]-0.40, size/2))
@@ -1190,7 +1238,7 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
                     dtaforest.append(s)
                     o.write(str(s)+'\n')
             
-            frsIndexes = sorted(range(len(frvals)), key=lambda k: frvals[k])
+            frsIndexes = sorted(range(len(frvals))) #, key=lambda k: frvals[k]
             
             
             
@@ -1208,7 +1256,8 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
             dtaforest.append(s)
             o.write(str(s)+'\n')
             o.write('!\n!\n!\n!\n!\n')
-            drawForstPlot(dtaforest,ms,'Forest Plot-InvSum',vType,msList,maxX=4,Q=Q,qpval=qpval,taw2=0)
+            drawForstPlot(dtaforest,ms,'Forest Plot-InvSum',vType,msList,Q=Q,qpval=qpval,taw2=0)
+            sfixed = s[:]
             print ('Fixed - Study',vType,ms)
 
             degf = len(cvsw.keys())-1
@@ -1234,10 +1283,11 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
             dstar = sum([cvsw[paper]['d']/(cvsw[paper]['v']+taw2) for paper in cvsw.keys()])/se
             
             #print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
-            
+            fws = []
             dss = str(sorted(list(cvsw.keys())))
             for i in range(len(dtaforest)):
                 if dtaforest[i][0] in cvsw.keys():
+                    fws.append(dtaforest[i][-1])
                     dtaforest[i][-1] = 1.0/(cvsw[dtaforest[i][0]]['v']+taw2)
                     
 
@@ -1247,7 +1297,7 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
             dtaforest[-1]=s
             #o.write(str(s)+'\n')
             #o.write('!\n!\n!\n!\n!\n')
-            drawForstPlot(dtaforest,ms,'Random-Forest Plot-InvSum',vType,msList,maxX=4,Q=Q,qpval=qpval,taw2=taw2)
+            drawForstPlot(dtaforest,ms,'Random-Forest Plot-InvSum',vType,msList,Q=Q,qpval=qpval,taw2=taw2,fws=fws,sfixed = sfixed)
 
 
 #Forest plots for datasets and learners
@@ -1348,7 +1398,7 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
                     frvals.append(cvsw[ds]['d'])
                     o.write(str(s)+'\n')
 
-                frsIndexes = sorted(range(len(frvals)), key=lambda k: frvals[k])
+                frsIndexes = sorted(range(len(frvals))) #, key=lambda k: frvals[k]
 
                 s = ['@',type[1]+' InverseSum',vType,ms,dss]
                 dtaforest2.append(s)
@@ -1361,28 +1411,28 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
                 dtaforest = dtaforest2
 
 
-                #if type[0]=='ds':
-                #    dtaforest2 = []
-                #    dtaforest2.append(dtaforest[0])
-                #    dtaforest2.append(dtaforest[1])
-                #    dtaforest[0] = None
-                #    dtaforest[1] = None
-                #    for so in suitesOrder:
-                #        for i in range(len(dtaforest)):
-                #            if dtaforest[i] == None:
-                #                continue
-                #            if dtaforest[i][0] in dsSuites[so]:
-                #                dtaforest2.append(dtaforest[i])
-                #                dtaforest[i] = None
-                #    for i in range(len(dtaforest)):
-                #        if dtaforest[i] == None:
-                #            continue
-                #        dtaforest2.append(dtaforest[i])
+                if type[0]=='ds':
+                    dtaforest2 = []
+                    dtaforest2.append(dtaforest[0])
+                    dtaforest2.append(dtaforest[1])
+                    dtaforest[0] = None
+                    dtaforest[1] = None
+                    for so in suitesOrder:
+                        for i in range(len(dtaforest)):
+                            if dtaforest[i] == None:
+                                continue
+                            if dtaforest[i][0] in dsSuites[so]:
+                                dtaforest2.append(dtaforest[i])
+                                dtaforest[i] = None
+                    for i in range(len(dtaforest)):
+                        if dtaforest[i] == None:
+                            continue
+                        dtaforest2.append(dtaforest[i])
                     
-                #    if len(dtaforest)!=len(dtaforest2):
-                #        print ('Not Equal...Error')
-                #        input('')
-                #    dtaforest = dtaforest2
+                    if len(dtaforest)!=len(dtaforest2):
+                        print ('Not Equal...Error')
+                        input('')
+                    dtaforest = dtaforest2
                 
                 s = ['Fixed',dstar,dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se),se,math.sqrt(1/se),dstar/math.sqrt(1/se),2*norm.sf(abs(dstar/math.sqrt(1/se)))]
                 dtaforest.append(s)
@@ -1391,7 +1441,7 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
                 #sort based on dataset 
                 print ('Fixed - ',type[0],vType,ms)                                                
                 drawForstPlot(dtaforest,ms,'Forest Plot-'+type[1]+'-InvSum',vType,msList,Q=Q,qpval = qpval,taw2=taw2)
-
+                sfixed = s[:]
 
                 #Q = sum([((cvsw[ds]['d']-dstar)**2)/cvsw[ds]['v'] for ds in cvsw.keys()])
                 #qpval = chisqprob(Q,len(cvsw.keys())-1)
@@ -1420,10 +1470,11 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
                 dstar = sum([cvsw[ds]['d']/(cvsw[ds]['v']+taw2) for ds in cvsw.keys()])/se
             
                 #print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
-            
+                fws = []
                 dss = str(sorted(list(cvsw.keys())))
-                for i in range(len(dtaforest)):
+                for i in range(len(dtaforest)):                    
                     if dtaforest[i][0] in cvsw.keys():
+                        fws.append(dtaforest[i][-1])
                         dtaforest[i][-1] = 1.0/(cvsw[dtaforest[i][0]]['v']+taw2)
                     
 
@@ -1433,7 +1484,7 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
                 dtaforest[-1]=s
                 #o.write(str(s)+'\n')
                 #o.write('!\n!\n!\n!\n!\n')
-                drawForstPlot(dtaforest,ms,'Random-Forest Plot-'+type[1]+'-InvSum',vType,msList,Q=Q,qpval = qpval,taw2=taw2)
+                drawForstPlot(dtaforest,ms,'Random-Forest Plot-'+type[1]+'-InvSum',vType,msList,Q=Q,qpval = qpval,taw2=taw2,fws=fws,sfixed=sfixed)
 
 
 
