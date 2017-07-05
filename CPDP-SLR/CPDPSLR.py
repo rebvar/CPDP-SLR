@@ -41,7 +41,7 @@ def is_num(val):
 wb = openpyxl.load_workbook(name)
 ws = wb.active
 minrow = 3
-maxrow  = 2810
+maxrow  = 2822
 
 colmeasu = 5
 colwc = 8
@@ -67,7 +67,8 @@ cols = {
 'specificity' : m+12,
 'mcc' : m+13,
 'h-measure' : m+14,
-'g-mean3' : m+15
+'g-mean3' : m+15,
+'hubertstat':m+17
 }
 
 
@@ -1145,7 +1146,10 @@ o = open('forestdata.txt','w')
 o2= open('forestdata2.txt','w')
 #Forest plots for studies
 
+pprWandC={}
+
 for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balance'],['f-measure'],['pf','recall','balance'],['precision','recall','f-measure'],['auc']]:
+    
     for vType in sorted(list(allvalTypes)):
 
         for ms in msList if len(msList)>0 else colslst:
@@ -1180,7 +1184,16 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
             Q = -1
             qpval = -1
             taw2 = -1
+
+            
+            if not ms in pprWandC.keys():
+                pprWandC[ms] = {}
+            if not vType in pprWandC[ms].keys():
+                pprWandC[ms][vType] = []
+
+
             for paper in cvsw.keys():
+                pprWandC[ms][vType].append(paper)
                 meanW = np.mean(cvsw[paper]['W'])
                 meanC = np.mean(cvsw[paper]['C'])
                 stdW = np.std(cvsw[paper]['W'])
@@ -1301,7 +1314,7 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
 
 
 #Forest plots for datasets and learners
-for type in [['ds','Dataset'],['lrnr','Learner']]:
+for type in []:#[['ds','Dataset'],['lrnr','Learner']]:
     for msList in [[]]:#['f-measure'],['pf','recall','balance'],['precision','recall','f-measure'],['auc']]:
         for vType in sorted(list(allvalTypes)):
             for ms in msList if len(msList)>0 else colslst:
@@ -1486,7 +1499,200 @@ for type in [['ds','Dataset'],['lrnr','Learner']]:
                 #o.write('!\n!\n!\n!\n!\n')
                 drawForstPlot(dtaforest,ms,'Random-Forest Plot-'+type[1]+'-InvSum',vType,msList,Q=Q,qpval = qpval,taw2=taw2,fws=fws,sfixed=sfixed)
 
+for type in [['ds','Dataset-SB'],['lrnr','Learner-SB']]:
+    for msList in [[]]:#['f-measure'],['pf','recall','balance'],['precision','recall','f-measure'],['auc']]:
+        for vType in sorted(list(allvalTypes)):
+            for ms in msList if len(msList)>0 else colslst:
+                cvsw = {}
+                dss = set()
+                for row in range(minrow,maxrow):
+                    
 
+                    if row in invRows:
+                        continue
+                    
+                    if not set(dicrows[str(row)]['colVals'].keys()).issuperset(set(msList)):
+                        continue
+                    if dicrows[str(row)]['valueType'] != vType and dicrows[str(row)]['valueType'] != 'original':
+                        continue
+                    if not ms in dicrows[str(row)]['colVals'].keys():
+                        continue
+                    ds = dicrows[str(row)][type[0]]
+                    if ds.startswith('row') or ds.startswith('mn-') or ds.startswith('mdn-'):
+                        continue
+                    paper = getpaper(row,papers)
+                    if not ms in pprWandC.keys():
+                        continue
+                    if not vType in pprWandC[ms].keys():
+                        print (ms,vType)
+                        continue
+                    if not paper in pprWandC[ms][vType]:
+                        continue
+                    dss.add(ds)
+                    if not ds in cvsw.keys():
+                        cvsw[ds] = {}
+                        cvsw[ds]['W'] = []
+                        cvsw[ds]['C'] = []
+                    cvsw[ds][dicrows[str(row)]['WC']].append(dicrows[str(row)]['colVals'][ms])
+            
+                
+                keys = list(cvsw.keys())
+                for ds in keys:
+                    if len(cvsw[ds]['W'])<=1 or len(cvsw[ds]['C'])<=1:
+                        del cvsw[ds]
+                if len(cvsw.keys())==0:
+                    print(vType,ms,sorted(list(cvsw.keys())),'No '+type[0])
+                    continue
+
+                o2.write('#Raw Data for %s %s %s\n' % (type[1],vType,ms))
+
+                Q=-1
+                qpval=-1
+                taw2=-1
+                for ds in cvsw.keys():
+                    meanW = np.mean(cvsw[ds]['W'])
+                    meanC = np.mean(cvsw[ds]['C'])
+                    stdW = np.std(cvsw[ds]['W'])
+                    stdC = np.std(cvsw[ds]['C'])
+                    nw = len(cvsw[ds]['W'])
+                    nc = len(cvsw[ds]['C'])
+                    
+                    stdP = math.sqrt(((nw-1)*stdW*stdW+(nc-1)*stdC*stdC)/(nw+nc-2))
+                    
+                    g = (meanC - meanW)/stdP
+                    d = J(nw+nc-2)*g
+                    nh = nhat(nw,nc)
+                    v = nh+((d*d)/(2*(nc+nw)))
+                    Ll = d-1.96*np.sqrt(v)
+                    Lu = d+1.96*np.sqrt(v)
+                    
+                    cvsw[ds]['meanW'] = meanW
+                    cvsw[ds]['meanC'] = meanC
+                    cvsw[ds]['stdW'] = stdW
+                    cvsw[ds]['stdC'] = stdC
+                    cvsw[ds]['stdP'] = stdP
+                    cvsw[ds]['nW'] = nw
+                    cvsw[ds]['nC'] = nc
+                    cvsw[ds]['n'] = nc+nw
+                    cvsw[ds]['g'] = g
+                    cvsw[ds]['d'] = d 
+                    cvsw[ds]['Ll'] = Ll
+                    cvsw[ds]['Lu'] = Lu
+                    cvsw[ds]['nh'] = nh
+                    cvsw[ds]['v'] = v
+                    cvsw[ds]['vsq'] = np.sqrt(v)
+                    
+                    o2.write('%s\t %f\t %f\t %d\t %f\t %f\t %d\n' % (ds,meanW,stdW,nw,meanC,stdC,nc))
+            
+                o2.write('\n\n\n\n')
+                se = sum([1.0/cvsw[ds]['v'] for ds in cvsw.keys()])
+                if se==0:                    
+                    print ('SE Zero - Fixed - ',type[0],se, vType,ms)
+                    continue
+                dstar = sum([cvsw[ds]['d']/cvsw[ds]['v'] for ds in cvsw.keys()])/se
+
+                
+                #print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
+            
+            
+                dtaforest = []
+                dtaforest2 = []
+                dss = str(sorted(list(cvsw.keys())))
+                
+                frvals = []
+                for ds in sorted(list(cvsw.keys())):
+                    s = [ds,cvsw[ds]['d'],cvsw[ds]['Ll'],cvsw[ds]['Lu'],1.0/cvsw[ds]['v']]
+                    dtaforest.append(s)
+                    frvals.append(cvsw[ds]['d'])
+                    o.write(str(s)+'\n')
+
+                frsIndexes = sorted(range(len(frvals))) #, key=lambda k: frvals[k]
+
+                s = ['@',type[1]+' InverseSum',vType,ms,dss]
+                dtaforest2.append(s)
+                o.write(str(s)+'\n')
+                s = ['Study','Center','Low','High','Weight']
+                dtaforest2.append(s)
+                o.write(str(s)+'\n')
+                for fi,frsi in enumerate(frsIndexes):
+                    dtaforest2.append(dtaforest[frsi])
+                dtaforest = dtaforest2
+
+
+                if type[0]=='ds':
+                    dtaforest2 = []
+                    dtaforest2.append(dtaforest[0])
+                    dtaforest2.append(dtaforest[1])
+                    dtaforest[0] = None
+                    dtaforest[1] = None
+                    for so in suitesOrder:
+                        for i in range(len(dtaforest)):
+                            if dtaforest[i] == None:
+                                continue
+                            if dtaforest[i][0] in dsSuites[so]:
+                                dtaforest2.append(dtaforest[i])
+                                dtaforest[i] = None
+                    for i in range(len(dtaforest)):
+                        if dtaforest[i] == None:
+                            continue
+                        dtaforest2.append(dtaforest[i])
+                    
+                    if len(dtaforest)!=len(dtaforest2):
+                        print ('Not Equal...Error')
+                        input('')
+                    dtaforest = dtaforest2
+                
+                s = ['Fixed',dstar,dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se),se,math.sqrt(1/se),dstar/math.sqrt(1/se),2*norm.sf(abs(dstar/math.sqrt(1/se)))]
+                dtaforest.append(s)
+                o.write(str(s)+'\n')
+                o.write('!\n!\n!\n!\n!\n')
+                #sort based on dataset 
+                print ('Fixed - ',type[0],vType,ms)                                                
+                drawForstPlot(dtaforest,ms,'Forest Plot-'+type[1]+'-InvSum',vType,msList,Q=Q,qpval = qpval,taw2=taw2)
+                sfixed = s[:]
+
+                #Q = sum([((cvsw[ds]['d']-dstar)**2)/cvsw[ds]['v'] for ds in cvsw.keys()])
+                #qpval = chisqprob(Q,len(cvsw.keys())-1)
+                #print ('QPVAL->',Q,qpval)
+                
+
+                degf = len(cvsw.keys())-1
+                Q = sum([((cvsw[ds]['d']-dstar)**2)/cvsw[ds]['v'] for ds in cvsw.keys()])
+                qpval = chisqprob(Q,degf)
+                taw2 = 0
+            
+                if Q<=degf:
+                    taw2 = 0                
+                else:
+                    C = se - sum([(1.0/cvsw[ds]['v'])**2 for ds in cvsw.keys()])/se
+                    if C==0:
+                        print ('C Zero - Random - ',type[0],C, vType,ms)
+                        continue
+                    taw2 = (Q-degf)/C
+           
+                se = sum([1.0/(cvsw[ds]['v']+taw2) for ds in cvsw.keys()])
+                if se==0:
+                    
+                    print ('SE Zero - Random - ',type[0],se, vType,ms)
+                    continue
+                dstar = sum([cvsw[ds]['d']/(cvsw[ds]['v']+taw2) for ds in cvsw.keys()])/se
+            
+                #print(vType,ms,sorted(list(cvsw.keys())),dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se))
+                fws = []
+                dss = str(sorted(list(cvsw.keys())))
+                for i in range(len(dtaforest)):                    
+                    if dtaforest[i][0] in cvsw.keys():
+                        fws.append(dtaforest[i][-1])
+                        dtaforest[i][-1] = 1.0/(cvsw[dtaforest[i][0]]['v']+taw2)
+                    
+
+
+                s = ['Random',dstar,dstar-1.96*math.sqrt(1/se),dstar+1.96*math.sqrt(1/se),se,math.sqrt(1/se),dstar/math.sqrt(1/se),2*norm.sf(abs(dstar/math.sqrt(1/se)))]
+                print ('Random - ',type[0],vType,ms)
+                dtaforest[-1]=s
+                #o.write(str(s)+'\n')
+                #o.write('!\n!\n!\n!\n!\n')
+                drawForstPlot(dtaforest,ms,'Random-Forest Plot-'+type[1]+'-InvSum',vType,msList,Q=Q,qpval = qpval,taw2=taw2,fws=fws,sfixed=sfixed)
 
 
 #List of the papers for each reporting type
@@ -1689,9 +1895,6 @@ def copyFilesForPaper():
 
 
 copyFilesForPaper()
-
-
-
 
 for c in cols.keys():
     print (c)
