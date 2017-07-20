@@ -1,0 +1,949 @@
+['A1', 'A11', 'A13', 'A14', 'A15', 'A16', 'A18', 'A2', 'A20', 'A23', 'A24', 'A25', 'A26', 'A27', 'A3', 'A35', 'A37', 'A39', 'A4', 'A40', 'A41', 'A42', 'A43', 'A44', 'A46', 'A5', 'A7', 'A8']
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+A35
+['feature selection', 'oo', 'oo+loc', 'oo+process+loc', 'oo+scm+loc', 'oo+scm+process+loc', 'process', 'process+context', 'scm', 'scm+context', 'scm+loc', 'scm+process', 'scm+process+context', 'source code text']
+['data', 'learner', 'learner+data', 'metric', 'none']
+['class level', 'file level', 'function level']
+['None', 'clustering+normalization', 'clustering+re-weighting', 'data transformation', 'data transformation+normalization', 'discretization', 'discretization+re-weighting', 'feature selection', 'filtering', 'filtering+log-filter', 'filtering+log-filter+mixed data', 'filtering+mixed data+re-sampling+re-weighting', 'filtering+privacy', 'filtering+re-weighting', 'log-filter', 'log-filter+normalization', 'log-filter+re-weighting', 'mixed data+normalization', 'mixed data+normalization+re-sampling', 'mixed data+normalization+re-sampling+re-weighting', 'none', 'normalization', 'normalization+re-sampling+re-weighting', 'normalization+re-weighting', 'privacy', 're-sampling', 're-weighting']
+['clustering', 'data transformation', 'discretization', 'feature selection', 'filtering', 'log-filter', 'mixed data', 'none', 'normalization', 'privacy', 're-sampling', 're-weighting']
+Default Font size is: 12.0
+Fixed - Study average accuracy
+C Zero - Random - Study 0.0 average accuracy 3.99310491519
+Fixed - Study average auc
+Random - Study average auc
+average auc-ce [] No paper
+Fixed - Study average balance
+Random - Study average balance
+Fixed - Study average f-measure
+Random - Study average f-measure
+Fixed - Study average g-mean1
+Random - Study average g-mean1
+Fixed - Study average g-mean2
+Random - Study average g-mean2
+average g-mean3 [] No paper
+Fixed - Study average g-measure
+Random - Study average g-measure
+average h-measure [] No paper
+average hubertstat [] No paper
+Fixed - Study average mcc
+Random - Study average mcc
+Fixed - Study average pf
+Random - Study average pf
+Fixed - Study average precision
+Random - Study average precision
+Fixed - Study average recall
+Random - Study average recall
+average specificity [] No paper
+Fixed - Study median accuracy
+Random - Study median accuracy
+Fixed - Study median auc
+Random - Study median auc
+median auc-ce [] No paper
+Fixed - Study median balance
+Random - Study median balance
+Fixed - Study median f-measure
+Random - Study median f-measure
+Fixed - Study median g-mean1
+Random - Study median g-mean1
+Fixed - Study median g-mean2
+Random - Study median g-mean2
+median g-mean3 [] No paper
+Fixed - Study median g-measure
+Random - Study median g-measure
+median h-measure [] No paper
+median hubertstat [] No paper
+median mcc [] No paper
+Fixed - Study median pf
+Random - Study median pf
+Fixed - Study median precision
+Random - Study median precision
+Fixed - Study median recall
+Random - Study median recall
+median specificity [] No paper
+Fixed - Study original accuracy
+Random - Study original accuracy
+Fixed - Study original auc
+Random - Study original auc
+original auc-ce [] No paper
+Fixed - Study original balance
+Random - Study original balance
+Fixed - Study original f-measure
+Random - Study original f-measure
+Fixed - Study original g-mean1
+Random - Study original g-mean1
+Fixed - Study original g-mean2
+Random - Study original g-mean2
+original g-mean3 [] No paper
+Fixed - Study original g-measure
+Random - Study original g-measure
+original h-measure [] No paper
+original hubertstat [] No paper
+original mcc [] No paper
+Fixed - Study original pf
+Random - Study original pf
+Fixed - Study original precision
+Random - Study original precision
+Fixed - Study original recall
+Random - Study original recall
+original specificity [] No paper
+average accuracy [] No ds
+Fixed -  ds average auc
+Random -  ds average auc
+average auc-ce [] No ds
+Fixed -  ds average balance
+Random -  ds average balance
+Fixed -  ds average f-measure
+Random -  ds average f-measure
+Fixed -  ds average g-mean1
+Random -  ds average g-mean1
+Fixed -  ds average g-mean2
+Random -  ds average g-mean2
+average g-mean3 [] No ds
+Fixed -  ds average g-measure
+Random -  ds average g-measure
+average h-measure [] No ds
+average hubertstat [] No ds
+Fixed -  ds average mcc
+Random -  ds average mcc
+Fixed -  ds average pf
+Random -  ds average pf
+Fixed -  ds average precision
+Random -  ds average precision
+Fixed -  ds average recall
+Random -  ds average recall
+average specificity [] No ds
+median accuracy [] No ds
+Fixed -  ds median auc
+Random -  ds median auc
+median auc-ce [] No ds
+Fixed -  ds median balance
+Random -  ds median balance
+Fixed -  ds median f-measure
+Random -  ds median f-measure
+Fixed -  ds median g-mean1
+Random -  ds median g-mean1
+Fixed -  ds median g-mean2
+Random -  ds median g-mean2
+median g-mean3 [] No ds
+Fixed -  ds median g-measure
+Random -  ds median g-measure
+median h-measure [] No ds
+median hubertstat [] No ds
+median mcc [] No ds
+Fixed -  ds median pf
+Random -  ds median pf
+Fixed -  ds median precision
+Random -  ds median precision
+Fixed -  ds median recall
+Random -  ds median recall
+median specificity [] No ds
+original accuracy [] No ds
+Fixed -  ds original auc
+Random -  ds original auc
+original auc-ce [] No ds
+Fixed -  ds original balance
+Random -  ds original balance
+Fixed -  ds original f-measure
+Random -  ds original f-measure
+Fixed -  ds original g-mean1
+Random -  ds original g-mean1
+Fixed -  ds original g-mean2
+Random -  ds original g-mean2
+original g-mean3 [] No ds
+Fixed -  ds original g-measure
+Random -  ds original g-measure
+original h-measure [] No ds
+original hubertstat [] No ds
+original mcc [] No ds
+Fixed -  ds original pf
+Random -  ds original pf
+Fixed -  ds original precision
+Random -  ds original precision
+Fixed -  ds original recall
+Random -  ds original recall
+original specificity [] No ds
+Fixed -  lrnr average accuracy
+C Zero - Random -  lrnr 0.0 average accuracy
+Fixed -  lrnr average auc
+Random -  lrnr average auc
+average auc-ce [] No lrnr
+Fixed -  lrnr average balance
+Random -  lrnr average balance
+Fixed -  lrnr average f-measure
+Random -  lrnr average f-measure
+Fixed -  lrnr average g-mean1
+Random -  lrnr average g-mean1
+Fixed -  lrnr average g-mean2
+Random -  lrnr average g-mean2
+average g-mean3 [] No lrnr
+Fixed -  lrnr average g-measure
+Random -  lrnr average g-measure
+average h-measure [] No lrnr
+average hubertstat [] No lrnr
+Fixed -  lrnr average mcc
+Random -  lrnr average mcc
+Fixed -  lrnr average pf
+Random -  lrnr average pf
+Fixed -  lrnr average precision
+Random -  lrnr average precision
+Fixed -  lrnr average recall
+Random -  lrnr average recall
+average specificity [] No lrnr
+Fixed -  lrnr median accuracy
+Random -  lrnr median accuracy
+Fixed -  lrnr median auc
+Random -  lrnr median auc
+median auc-ce [] No lrnr
+Fixed -  lrnr median balance
+Random -  lrnr median balance
+Fixed -  lrnr median f-measure
+Random -  lrnr median f-measure
+Fixed -  lrnr median g-mean1
+Random -  lrnr median g-mean1
+Fixed -  lrnr median g-mean2
+Random -  lrnr median g-mean2
+median g-mean3 [] No lrnr
+Fixed -  lrnr median g-measure
+Random -  lrnr median g-measure
+median h-measure [] No lrnr
+median hubertstat [] No lrnr
+median mcc [] No lrnr
+Fixed -  lrnr median pf
+Random -  lrnr median pf
+Fixed -  lrnr median precision
+Random -  lrnr median precision
+Fixed -  lrnr median recall
+Random -  lrnr median recall
+median specificity [] No lrnr
+Fixed -  lrnr original accuracy
+Random -  lrnr original accuracy
+Fixed -  lrnr original auc
+Random -  lrnr original auc
+original auc-ce [] No lrnr
+Fixed -  lrnr original balance
+Random -  lrnr original balance
+Fixed -  lrnr original f-measure
+Random -  lrnr original f-measure
+Fixed -  lrnr original g-mean1
+Random -  lrnr original g-mean1
+Fixed -  lrnr original g-mean2
+Random -  lrnr original g-mean2
+original g-mean3 [] No lrnr
+Fixed -  lrnr original g-measure
+Random -  lrnr original g-measure
+original h-measure [] No lrnr
+original hubertstat [] No lrnr
+original mcc [] No lrnr
+Fixed -  lrnr original pf
+Random -  lrnr original pf
+Fixed -  lrnr original precision
+Random -  lrnr original precision
+Fixed -  lrnr original recall
+Random -  lrnr original recall
+original specificity [] No lrnr
+average accuracy [] No ds
+Fixed -  ds average auc
+Random -  ds average auc
+average auc-ce [] No ds
+Fixed -  ds average balance
+Random -  ds average balance
+Fixed -  ds average f-measure
+Random -  ds average f-measure
+Fixed -  ds average g-mean1
+Random -  ds average g-mean1
+Fixed -  ds average g-mean2
+Random -  ds average g-mean2
+average g-mean3 [] No ds
+Fixed -  ds average g-measure
+Random -  ds average g-measure
+average h-measure [] No ds
+average hubertstat [] No ds
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+Fixed -  ds average mcc
+Random -  ds average mcc
+Fixed -  ds average pf
+Random -  ds average pf
+Fixed -  ds average precision
+Random -  ds average precision
+Fixed -  ds average recall
+Random -  ds average recall
+average specificity [] No ds
+median accuracy [] No ds
+Fixed -  ds median auc
+Random -  ds median auc
+median auc-ce [] No ds
+Fixed -  ds median balance
+Random -  ds median balance
+Fixed -  ds median f-measure
+Random -  ds median f-measure
+Fixed -  ds median g-mean1
+Random -  ds median g-mean1
+Fixed -  ds median g-mean2
+Random -  ds median g-mean2
+median g-mean3 [] No ds
+Fixed -  ds median g-measure
+Random -  ds median g-measure
+median h-measure [] No ds
+median hubertstat [] No ds
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+median mcc [] No ds
+Fixed -  ds median pf
+Random -  ds median pf
+Fixed -  ds median precision
+Random -  ds median precision
+Fixed -  ds median recall
+Random -  ds median recall
+median specificity [] No ds
+original accuracy [] No ds
+Fixed -  ds original auc
+Random -  ds original auc
+original auc-ce [] No ds
+Fixed -  ds original balance
+Random -  ds original balance
+Fixed -  ds original f-measure
+Random -  ds original f-measure
+Fixed -  ds original g-mean1
+Random -  ds original g-mean1
+Fixed -  ds original g-mean2
+Random -  ds original g-mean2
+original g-mean3 [] No ds
+Fixed -  ds original g-measure
+Random -  ds original g-measure
+original h-measure [] No ds
+original hubertstat [] No ds
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+original mcc [] No ds
+Fixed -  ds original pf
+Random -  ds original pf
+Fixed -  ds original precision
+Random -  ds original precision
+Fixed -  ds original recall
+Random -  ds original recall
+original specificity [] No ds
+Fixed -  lrnr average accuracy
+C Zero - Random -  lrnr 0.0 average accuracy
+Fixed -  lrnr average auc
+Random -  lrnr average auc
+average auc-ce [] No lrnr
+Fixed -  lrnr average balance
+Random -  lrnr average balance
+Fixed -  lrnr average f-measure
+Random -  lrnr average f-measure
+Fixed -  lrnr average g-mean1
+Random -  lrnr average g-mean1
+Fixed -  lrnr average g-mean2
+Random -  lrnr average g-mean2
+average g-mean3 [] No lrnr
+Fixed -  lrnr average g-measure
+Random -  lrnr average g-measure
+average h-measure [] No lrnr
+average hubertstat [] No lrnr
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+Fixed -  lrnr average mcc
+Random -  lrnr average mcc
+Fixed -  lrnr average pf
+Random -  lrnr average pf
+Fixed -  lrnr average precision
+Random -  lrnr average precision
+Fixed -  lrnr average recall
+Random -  lrnr average recall
+average specificity [] No lrnr
+Fixed -  lrnr median accuracy
+Random -  lrnr median accuracy
+Fixed -  lrnr median auc
+Random -  lrnr median auc
+median auc-ce [] No lrnr
+Fixed -  lrnr median balance
+Random -  lrnr median balance
+Fixed -  lrnr median f-measure
+Random -  lrnr median f-measure
+Fixed -  lrnr median g-mean1
+Random -  lrnr median g-mean1
+Fixed -  lrnr median g-mean2
+Random -  lrnr median g-mean2
+median g-mean3 [] No lrnr
+Fixed -  lrnr median g-measure
+Random -  lrnr median g-measure
+median h-measure [] No lrnr
+median hubertstat [] No lrnr
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+median mcc [] No lrnr
+Fixed -  lrnr median pf
+Random -  lrnr median pf
+Fixed -  lrnr median precision
+Random -  lrnr median precision
+Fixed -  lrnr median recall
+Random -  lrnr median recall
+median specificity [] No lrnr
+Fixed -  lrnr original accuracy
+Random -  lrnr original accuracy
+Fixed -  lrnr original auc
+Random -  lrnr original auc
+original auc-ce [] No lrnr
+Fixed -  lrnr original balance
+Random -  lrnr original balance
+Fixed -  lrnr original f-measure
+Random -  lrnr original f-measure
+Fixed -  lrnr original g-mean1
+Random -  lrnr original g-mean1
+Fixed -  lrnr original g-mean2
+Random -  lrnr original g-mean2
+original g-mean3 [] No lrnr
+Fixed -  lrnr original g-measure
+Random -  lrnr original g-measure
+original h-measure [] No lrnr
+original hubertstat [] No lrnr
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+mcc original
+original mcc [] No lrnr
+Fixed -  lrnr original pf
+Random -  lrnr original pf
+Fixed -  lrnr original precision
+Random -  lrnr original precision
+Fixed -  lrnr original recall
+Random -  lrnr original recall
+original specificity [] No lrnr
+original ['A1', 'A15', 'A16', 'A2', 'A24', 'A35', 'A39', 'A4', 'A41', 'A42', 'A46', 'A7', 'A8']
+median ['A11', 'A13', 'A20', 'A27', 'A3', 'A37', 'A43', 'A44']
+average ['A1', 'A14', 'A18', 'A23', 'A25', 'A26', 'A40', 'A5']
+Multi ['A1']
+
+
+
+ Metric Types
+process 220 ['A39']
+scm+process+context 1 ['A40']
+oo+loc 254 ['A11', 'A2', 'A8']
+oo+scm+process+loc 194 ['A24', 'A37', 'A41']
+source code text 12 ['A1']
+oo+scm+loc 626 ['A13', 'A18', 'A23', 'A27', 'A3', 'A37', 'A40', 'A42', 'A44', 'A5']
+scm+context 1 ['A40']
+scm 43 ['A40', 'A46']
+scm+loc 879 ['A13', 'A14', 'A15', 'A16', 'A20', 'A24', 'A25', 'A26', 'A37', 'A4', 'A41', 'A43']
+feature selection 10 ['A37']
+scm+process 1 ['A40']
+oo 24 ['A35', 'A7']
+process+context 1 ['A40']
+['A13', 'A24', 'A37', 'A40', 'A41']
+Papers in only one cat:
+A39
+A1
+A46
+A35
+A7
+
+
+
+oo ['A11', 'A13', 'A18', 'A2', 'A23', 'A24', 'A27', 'A3', 'A35', 'A37', 'A40', 'A41', 'A42', 'A44', 'A5', 'A7', 'A8'] 17
+loc ['A11', 'A13', 'A14', 'A15', 'A16', 'A18', 'A2', 'A20', 'A23', 'A24', 'A25', 'A26', 'A27', 'A3', 'A37', 'A4', 'A40', 'A41', 'A42', 'A43', 'A44', 'A5', 'A8'] 23
+scm ['A13', 'A14', 'A15', 'A16', 'A18', 'A20', 'A23', 'A24', 'A25', 'A26', 'A27', 'A3', 'A37', 'A4', 'A40', 'A41', 'A42', 'A43', 'A44', 'A46', 'A5'] 21
+process ['A24', 'A37', 'A39', 'A40', 'A41'] 5
+
+
+
+
+2811
+2812
+2813
+2814
+2815
+2816
+2817
+2818
+2819
+2820
+2821
+rf 248
+ensemble maxvoting 10
+mo-optimization dtree 60
+dt 19
+ensemble lr 264
+bagging dtree 10
+bagging nb 10
+ensemble nb 14
+ibk 10
+bn 17
+rbf 10
+boosting dtree 10
+dtree 43
+lr 455
+crm114 12
+adt 10
+metalearner bn 10
+metalearner lr 20
+gp 21
+svm 34
+mlp 10
+nn 102
+part 10
+metalearner dtree 22
+mo-optimization lr 60
+ensemble voting 10
+boosting svm 10
+ar 10
+boosting nb 160
+nb 513
+ac 72
+
+
+
+
+[('ensemble maxvoting', 10), ('bagging dtree', 10), ('bagging nb', 10), ('ibk', 10), ('rbf', 10), ('boosting dtree', 10), ('adt', 10), ('metalearner bn', 10), ('mlp', 10), ('part', 10), ('ensemble voting', 10), ('boosting svm', 10), ('ar', 10), ('crm114', 12), ('ensemble nb', 14), ('bn', 17), ('dt', 19), ('metalearner lr', 20), ('gp', 21), ('metalearner dtree', 22), ('svm', 34), ('dtree', 43), ('mo-optimization dtree', 60), ('mo-optimization lr', 60), ('ac', 72), ('nn', 102), ('boosting nb', 160), ('rf', 248), ('ensemble lr', 264), ('lr', 455), ('nb', 513)] 
+
+
+
+
+ibk 10 {'A26'} 1
+rbf 10 {'A8'} 1
+adt 10 {'A8'} 1
+mlp 10 {'A8'} 1
+part 10 {'A26'} 1
+ar 10 {'A11'} 1
+crm114 12 {'A1'} 1
+bn 17 {'A8', 'A3'} 2
+dt 19 {'A8', 'A3', 'A7'} 3
+gp 21 {'A14'} 1
+svm 34 {'A26', 'A41', 'A3', 'A23', 'A7'} 5
+dtree 43 {'A26', 'A2', 'A11', 'A3', 'A7'} 5
+ac 72 {'A16'} 1
+nn 102 {'A41', 'A27', 'A7'} 3
+rf 248 {'A26', 'A41', 'A42', 'A39', 'A7'} 5
+lr 455 {'A11', 'A37', 'A3', 'A15', 'A35', 'A4', 'A8', 'A24', 'A41'} 9
+nb 513 {'A26', 'A7', 'A25', 'A3', 'A40', 'A13', 'A44', 'A18', 'A20', 'A41', 'A43', 'A46'} 12
+
+
+
+
+
+
+clustering ['A11', 'A23']
+data transformation ['A2', 'A24', 'A35', 'A40', 'A41']
+discretization ['A16', 'A18']
+feature selection ['A15', 'A3', 'A37', 'A42']
+filtering ['A13', 'A18', 'A20', 'A23', 'A25', 'A27', 'A41', 'A43', 'A44', 'A5']
+log-filter ['A13', 'A18', 'A20', 'A25', 'A4', 'A43', 'A44']
+mixed data ['A13', 'A18', 'A44']
+none ['A1', 'A11', 'A13', 'A15', 'A16', 'A18', 'A2', 'A20', 'A24', 'A27', 'A3', 'A35', 'A37', 'A39', 'A40', 'A41', 'A42', 'A43', 'A46', 'A7']
+normalization ['A11', 'A14', 'A24', 'A26', 'A4', 'A41', 'A44', 'A8']
+privacy ['A27']
+re-sampling ['A18', 'A26', 'A39', 'A44']
+re-weighting ['A18', 'A23', 'A25', 'A26', 'A41', 'A44']
+
+
+
+
+File Not Found: all-ckMetrics-and-Features-average-f-measure.jpg
+File Not Found: all-ckMetrics-and-Features-average-recall.jpg
+File Not Found: all-ckMetrics-and-Features-average-precision.jpg
+File Not Found: all-ckMetrics-and-Features-median-f-measure.jpg
+File Not Found: all-ckMetrics-and-Features-median-recall.jpg
+File Not Found: all-ckMetrics-and-Features-median-precision.jpg
+File Not Found: all-ckMetrics-and-Features-average-auc.jpg
+File Not Found: all-ckMetrics-and-Features-median-auc.jpg
+File Not Found: precision,recall,f-measure-ckLearning-Techniques-average-f-measure.eps
+File Not Found: precision,recall,f-measure-ckLearning-Techniques-average-f-measure.jpg
+File Not Found: precision,recall,f-measure-ckLearning-Techniques-average-recall.eps
+File Not Found: precision,recall,f-measure-ckLearning-Techniques-average-recall.jpg
+File Not Found: precision,recall,f-measure-ckLearning-Techniques-average-precision.eps
+File Not Found: precision,recall,f-measure-ckLearning-Techniques-average-precision.jpg
+File Not Found: precision,recall,f-measure-ckLearning-Techniques-median-f-measure.eps
+File Not Found: precision,recall,f-measure-ckLearning-Techniques-median-f-measure.jpg
+File Not Found: precision,recall,f-measure-ckLearning-Techniques-median-recall.eps
+File Not Found: precision,recall,f-measure-ckLearning-Techniques-median-recall.jpg
+File Not Found: precision,recall,f-measure-ckLearning-Techniques-median-precision.eps
+File Not Found: precision,recall,f-measure-ckLearning-Techniques-median-precision.jpg
+File Not Found: all-ckLearning-Techniques-average-f-measure.jpg
+File Not Found: all-ckLearning-Techniques-average-recall.jpg
+File Not Found: all-ckLearning-Techniques-average-precision.jpg
+File Not Found: all-ckLearning-Techniques-average-pf.jpg
+File Not Found: all-ckLearning-Techniques-average-balance.jpg
+File Not Found: all-ckLearning-Techniques-median-f-measure.jpg
+File Not Found: all-ckLearning-Techniques-median-recall.jpg
+File Not Found: all-ckLearning-Techniques-median-precision.jpg
+File Not Found: all-ckLearning-Techniques-median-pf.jpg
+File Not Found: all-ckLearning-Techniques-median-balance.jpg
+File Not Found: all-ckLearning-Techniques-average-auc.jpg
+File Not Found: all-ckLearning-Techniques-median-auc.jpg
+File Not Found: pf,recall,balance-ckLearning-Techniques-average-balance.eps
+File Not Found: pf,recall,balance-ckLearning-Techniques-average-balance.jpg
+File Not Found: pf,recall,balance-ckLearning-Techniques-average-recall.eps
+File Not Found: pf,recall,balance-ckLearning-Techniques-average-recall.jpg
+File Not Found: pf,recall,balance-ckLearning-Techniques-average-pf.eps
+File Not Found: pf,recall,balance-ckLearning-Techniques-average-pf.jpg
+File Not Found: pf,recall,balance-ckLearning-Techniques-median-balance.eps
+File Not Found: pf,recall,balance-ckLearning-Techniques-median-balance.jpg
+File Not Found: pf,recall,balance-ckLearning-Techniques-median-recall.eps
+File Not Found: pf,recall,balance-ckLearning-Techniques-median-recall.jpg
+File Not Found: pf,recall,balance-ckLearning-Techniques-median-pf.eps
+File Not Found: pf,recall,balance-ckLearning-Techniques-median-pf.jpg
+File Not Found: all-ckAggregated-Data-Approach-in-Studies-average-f-measure.jpg
+File Not Found: all-ckAggregated-Data-Approach-in-Studies-average-recall.jpg
+File Not Found: all-ckAggregated-Data-Approach-in-Studies-average-precision.jpg
+File Not Found: all-ckAggregated-Data-Approach-in-Studies-median-f-measure.jpg
+File Not Found: all-ckAggregated-Data-Approach-in-Studies-median-recall.jpg
+File Not Found: all-ckAggregated-Data-Approach-in-Studies-median-precision.jpg
+File Not Found: all-ckAggregated-Data-Approach-in-Studies-average-auc.jpg
+File Not Found: all-ckAggregated-Data-Approach-in-Studies-median-auc.jpg
+File Not Found: all-ckData-Approach-in-Studies-average-f-measure.jpg
+File Not Found: all-ckData-Approach-in-Studies-average-recall.jpg
+File Not Found: all-ckData-Approach-in-Studies-average-precision.jpg
+File Not Found: all-ckData-Approach-in-Studies-median-f-measure.jpg
+File Not Found: all-ckData-Approach-in-Studies-median-recall.jpg
+File Not Found: all-ckData-Approach-in-Studies-median-precision.jpg
+File Not Found: all-ckData-Approach-in-Studies-average-auc.jpg
+File Not Found: all-ckData-Approach-in-Studies-median-auc.jpg
+File Not Found: all-ckMain-Approach-of-Studies-average-f-measure.jpg
+File Not Found: all-ckMain-Approach-of-Studies-average-recall.jpg
+File Not Found: all-ckMain-Approach-of-Studies-average-precision.jpg
+File Not Found: all-ckMain-Approach-of-Studies-median-f-measure.jpg
+File Not Found: all-ckMain-Approach-of-Studies-median-recall.jpg
+File Not Found: all-ckMain-Approach-of-Studies-median-precision.jpg
+File Not Found: all-ckMain-Approach-of-Studies-average-auc.jpg
+File Not Found: all-ckMain-Approach-of-Studies-median-auc.jpg
+File Not Found: all-ckLevel-of-Prediction-in-the-Studies-average-f-measure.jpg
+File Not Found: all-ckLevel-of-Prediction-in-the-Studies-average-recall.jpg
+File Not Found: all-ckLevel-of-Prediction-in-the-Studies-average-precision.jpg
+File Not Found: all-ckLevel-of-Prediction-in-the-Studies-average-auc.jpg
+File Not Found: all-ckLevel-of-Prediction-in-the-Studies-median-f-measure.jpg
+File Not Found: all-ckLevel-of-Prediction-in-the-Studies-median-recall.jpg
+File Not Found: all-ckLevel-of-Prediction-in-the-Studies-median-precision.jpg
+File Not Found: all-ckLevel-of-Prediction-in-the-Studies-median-auc.jpg
+hubertstat
+1 ['A35']
+1 ['A35']
+g-mean1
+1 ['A16']
+13 ['A1', 'A11', 'A15', 'A16', 'A2', 'A23', 'A25', 'A3', 'A39', 'A40', 'A41', 'A5', 'A7']
+h-measure
+1 ['A26']
+1 ['A26']
+mcc
+3 ['A18', 'A40', 'A41']
+3 ['A18', 'A40', 'A41']
+auc
+10 ['A11', 'A16', 'A25', 'A26', 'A37', 'A39', 'A4', 'A40', 'A46', 'A8']
+10 ['A11', 'A16', 'A25', 'A26', 'A37', 'A39', 'A4', 'A40', 'A46', 'A8']
+accuracy
+2 ['A1', 'A16']
+2 ['A1', 'A16']
+auc-ce
+1 ['A8']
+1 ['A8']
+balance
+4 ['A13', 'A20', 'A43', 'A44']
+12 ['A13', 'A14', 'A18', 'A20', 'A25', 'A26', 'A27', 'A40', 'A41', 'A43', 'A44', 'A7']
+recall
+21 ['A1', 'A11', 'A13', 'A14', 'A15', 'A16', 'A18', 'A2', 'A20', 'A23', 'A25', 'A26', 'A27', 'A3', 'A39', 'A40', 'A41', 'A43', 'A44', 'A5', 'A7']
+21 ['A1', 'A11', 'A13', 'A14', 'A15', 'A16', 'A18', 'A2', 'A20', 'A23', 'A25', 'A26', 'A27', 'A3', 'A39', 'A40', 'A41', 'A43', 'A44', 'A5', 'A7']
+g-mean3
+1 ['A16']
+1 ['A16']
+precision
+11 ['A1', 'A11', 'A15', 'A16', 'A2', 'A23', 'A3', 'A39', 'A40', 'A5', 'A7']
+13 ['A1', 'A11', 'A15', 'A16', 'A2', 'A23', 'A25', 'A3', 'A39', 'A40', 'A41', 'A5', 'A7']
+specificity
+1 ['A16']
+1 ['A16']
+pf
+12 ['A13', 'A14', 'A18', 'A20', 'A25', 'A26', 'A27', 'A40', 'A41', 'A43', 'A44', 'A7']
+12 ['A13', 'A14', 'A18', 'A20', 'A25', 'A26', 'A27', 'A40', 'A41', 'A43', 'A44', 'A7']
+f-measure
+11 ['A1', 'A16', 'A24', 'A25', 'A3', 'A39', 'A40', 'A41', 'A42', 'A5', 'A7']
+15 ['A1', 'A11', 'A15', 'A16', 'A2', 'A23', 'A24', 'A25', 'A3', 'A39', 'A40', 'A41', 'A42', 'A5', 'A7']
+g-mean2
+1 ['A44']
+12 ['A13', 'A14', 'A18', 'A20', 'A25', 'A26', 'A27', 'A40', 'A41', 'A43', 'A44', 'A7']
+g-measure
+3 ['A18', 'A27', 'A40']
+12 ['A13', 'A14', 'A18', 'A20', 'A25', 'A26', 'A27', 'A40', 'A41', 'A43', 'A44', 'A7']

@@ -26,6 +26,22 @@ import matplotlib.patches as mpatches
 import matplotlib
 from matplotlib.patches import Rectangle,Polygon
 
+import sys
+##Logger. print to stdout and file 
+class Logger(object):
+    def __init__(self):
+        self.terminal = sys.stdout
+        self.log = open("LOGS.txt", "w")
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)  
+        self.log.flush()    
+    def flush(self):
+        pass
+
+sys.stdout = Logger()
+
 
 sigLevel = 0.05
 
@@ -48,7 +64,7 @@ colwc = 8
  
 m = 14
 
-mcolnof20 = m+18
+mcolnof20 = m+17
 mcolcost = m+6
 
 
@@ -68,7 +84,7 @@ cols = {
 'mcc' : m+13,
 'h-measure' : m+14,
 'g-mean3' : m+15,
-'hubertstat':m+17
+'hubertstat':m+16
 }
 
 
@@ -140,6 +156,9 @@ for c in cols.keys():
 #Detect the evaluation measures for each paper
 for row in range(minrow,maxrow):
     paper = getpaper(row, papers)
+    if paper == 'A35':
+        print (paper)
+
     ds = ws.cell(row=row,column=7).value
     lrnr = ws.cell(row=row,column=6).value
     wc = ws.cell(row=row,column=8).value
@@ -290,6 +309,9 @@ for row in range(minrow,maxrow):
 
 
     for ck in colslst:
+        if paper=='A35':
+            print (paper)
+
         col = cols[ck]
         if not (ck in papers[paper]['measures']):
             continue
@@ -1312,9 +1334,8 @@ for msList in [[]]:#[],['precision','recall','f-measure'],['pf','recall','balanc
             #o.write('!\n!\n!\n!\n!\n')
             drawForstPlot(dtaforest,ms,'Random-Forest Plot-InvSum',vType,msList,Q=Q,qpval=qpval,taw2=taw2,fws=fws,sfixed = sfixed)
 
-
 #Forest plots for datasets and learners
-for type in []:#[['ds','Dataset'],['lrnr','Learner']]:
+for type in [['ds','Dataset'],['lrnr','Learner']]:
     for msList in [[]]:#['f-measure'],['pf','recall','balance'],['precision','recall','f-measure'],['auc']]:
         for vType in sorted(list(allvalTypes)):
             for ms in msList if len(msList)>0 else colslst:
@@ -1507,7 +1528,6 @@ for type in [['ds','Dataset-SB'],['lrnr','Learner-SB']]:
                 dss = set()
                 for row in range(minrow,maxrow):
                     
-
                     if row in invRows:
                         continue
                     
@@ -1520,13 +1540,14 @@ for type in [['ds','Dataset-SB'],['lrnr','Learner-SB']]:
                     ds = dicrows[str(row)][type[0]]
                     if ds.startswith('row') or ds.startswith('mn-') or ds.startswith('mdn-'):
                         continue
+            
                     paper = getpaper(row,papers)
                     if not ms in pprWandC.keys():
                         continue
-                    if not vType in pprWandC[ms].keys():
-                        print (ms,vType)
+                    if not dicrows[str(row)]['valueType'] in pprWandC[ms].keys():
+                        print (ms,dicrows[str(row)]['valueType'])
                         continue
-                    if not paper in pprWandC[ms][vType]:
+                    if not paper in pprWandC[ms][dicrows[str(row)]['valueType']]:
                         continue
                     dss.add(ds)
                     if not ds in cvsw.keys():
@@ -1773,8 +1794,12 @@ print ('\n\n\n')
 lrnrscounts = {}
 lrnrsStudies = {}
 for row in range(minrow,maxrow):
+    if row>2810:
+        print(row)
+        pass
     if row in invRows:
         continue
+    
     if dicrows[str(row)]['WC'] == 'C':
         lrnr = dicrows[str(row)]['lrnr']
         if lrnr in lrnrsStudies:
