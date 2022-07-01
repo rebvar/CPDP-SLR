@@ -9,7 +9,7 @@ keyring==9.3.1
 keyrings.alt==1.1.1
 matplotlib==1.5.3
 numpy==1.11.2
-openpyxl==2.4.0
+openpyxl==2.4.2
 Orange3==3.3.8
 pandas==0.19.1
 patsy==0.4.1
